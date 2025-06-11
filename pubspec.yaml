@@ -37,6 +37,8 @@ dependencies:
   flutter_svg: ^2.0.9
   flutter_markdown: ^0.7.1
   url_launcher: ^6.3.0
+  shadcn_ui:
+    path: third-party/flutter-shadcn-ui
 
 dev_dependencies:
   flutter_test:

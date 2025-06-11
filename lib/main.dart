@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'data_parser.dart';
 
 // Constants for dimensions
@@ -28,13 +29,19 @@ class TableEditorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Markdown Table Editor',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
+    return ShadTheme(
+      data: ShadThemeData(
+        colorScheme: ShadColorScheme.fromName('green', brightness: Brightness.light),
+        brightness: Brightness.light,
       ),
-      home: const TableEditorPage(),
+      child: MaterialApp(
+        title: 'Markdown Table Editor',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+          useMaterial3: true,
+        ),
+        home: const TableEditorPage(),
+      ),
     );
   }
 }
@@ -280,15 +287,12 @@ class _TableEditorPageState extends State<TableEditorPage> {
             ),
             const SizedBox(height: 15),
             Center(
-              child: ElevatedButton.icon(
+              child: ShadButton(
                 onPressed: _copyToClipboard,
-                icon: const Icon(Icons.copy),
-                label: const Text('Copy to Clipboard'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
+                leading: const Icon(Icons.copy),
+                child: const Text('Copy to Clipboard'),
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
               ),
             ),
           ],
@@ -372,19 +376,25 @@ child: SizedBox(
                           child: SizedBox(
                             width: columnWidth,
                             child: isPreviewMode
-                                ? MarkdownBody(
-                                    data: tableData[actualRowIndex][colIndex],
-                                    styleSheet: MarkdownStyleSheet(
-                                      p: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-                                    ),
-                                    onTapLink: (text, href, title) async {
-                                      if (href != null) {
-                                        final Uri url = Uri.parse(href);
-                                        if (await canLaunchUrl(url)) {
-                                          await launchUrl(url, mode: LaunchMode.externalApplication);
+                                ? Container(
+                                    // Ensure minimum tappable area for empty cells
+                                    constraints: BoxConstraints(minHeight: 30),
+                                    child: MarkdownBody(
+                                      data: tableData[actualRowIndex][colIndex].isEmpty 
+                                          ? " " 
+                                          : tableData[actualRowIndex][colIndex],
+                                      styleSheet: MarkdownStyleSheet(
+                                        p: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                      ),
+                                      onTapLink: (text, href, title) async {
+                                        if (href != null) {
+                                          final Uri url = Uri.parse(href);
+                                          if (await canLaunchUrl(url)) {
+                                            await launchUrl(url, mode: LaunchMode.externalApplication);
+                                          }
                                         }
-                                      }
-                                    },
+                                      },
+                                    ),
                                   )
                                 : TextField(
                                     controller: cellControllers[actualRowIndex][colIndex],
@@ -413,35 +423,39 @@ child: SizedBox(
     return Wrap(
       spacing: 10,
       children: [
-        ElevatedButton(
+        ShadButton(
           onPressed: _addRow,
           child: const Text('Add Row'),
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
         ),
-        ElevatedButton(
+        ShadButton(
           onPressed: _addColumn,
           child: const Text('Add Column'),
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
         ),
-        ElevatedButton(
+        ShadButton.secondary(
           onPressed: _deleteRow,
           child: const Text('Delete Row'),
         ),
-        ElevatedButton(
+        ShadButton.secondary(
           onPressed: _deleteColumn,
           child: const Text('Delete Column'),
         ),
-        ElevatedButton(
+        ShadButton.destructive(
           onPressed: _clearTable,
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          child: const Text('Clear Table', style: TextStyle(color: Colors.white)),
+          child: const Text('Clear Table'),
         ),
-        ElevatedButton(
+        ShadButton.secondary(
           onPressed: () {
             setState(() {
               isPreviewMode = !isPreviewMode;
             });
           },
-          style: ElevatedButton.styleFrom(backgroundColor: isPreviewMode ? Colors.grey : Colors.blue),
-          child: Text(isPreviewMode ? 'Preview Mode' : 'Edit Mode', style: TextStyle(color: Colors.white)),
+          backgroundColor: isPreviewMode ? Colors.grey : Colors.blue,
+          foregroundColor: Colors.white,
+          child: Text(isPreviewMode ? 'Preview Mode' : 'Edit Mode'),
         ),
       ],
     );
