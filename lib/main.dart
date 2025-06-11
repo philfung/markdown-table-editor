@@ -5,13 +5,20 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'data_parser.dart';
 
-// Constants for dimensions
+ // Constants for dimensions
 const double columnWidth = 150.0;
 const int initialHeaders = 3;
 const int snackbarDurationSeconds = 2;
 const double syncIconSize = 40.0;
-const double tableHeight = 180.0;
-const double tableIconSize = 24.0;
+const double tableHeight = 160.0;
+const double tableIconSize = 35.0;
+const double actionChipFontSize = 12.0;
+const double tableCellPadding = 4.0;
+const double tableCellFontSize = 12.0;
+const double tableCellWidth = 100.0;
+const double textAreaFontSize = 10.0;
+const double textAreaSpacing = 10.0;
+const int textAreaHeight = 3;
 
 List<List<String>> tableData = [
   ['**Header 1**', '**Header 2**', '**Header 3**'],
@@ -128,21 +135,24 @@ class _TableEditorPageState extends State<TableEditorPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              'images/table_icon.svg',
-              width: tableIconSize,
-              height: tableIconSize,
-              colorFilter: ColorFilter.mode(
-                Theme.of(context).colorScheme.onSurface,
-                BlendMode.srcIn,
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                'images/table_icon.svg',
+                width: tableIconSize,
+                height: tableIconSize,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.onSurface,
+                  BlendMode.srcIn,
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            const Text('Markdown Table Editor'),
-          ],
+              const SizedBox(width: 8),
+              const Text('Markdown Table Editor'),
+            ],
+          ),
         ),
       ),
       body: GestureDetector(
@@ -228,7 +238,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             Row(
               children: [
                 const Text('Format: ', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -252,10 +262,10 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: textAreaSpacing),
             TextField(
               controller: exportController,
-              maxLines: 5,
+              maxLines: textAreaHeight,
               decoration: const InputDecoration(
                 hintText: 'Paste data here to import or edit text directly. Supports Markdown, CSV, and Google Sheets formats.',
                 hintStyle: TextStyle(color: Colors.grey),
@@ -263,7 +273,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 filled: true,
                 fillColor: Color(0xFFF5F5F5),
               ),
-              style: const TextStyle(fontFamily: 'monospace'),
+              style: const TextStyle(fontFamily: 'monospace', fontSize: textAreaFontSize),
               onChanged: (value) {
                 if (value.trim().isNotEmpty) {
                   _handlePastedData(value.trim());
@@ -278,17 +288,15 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 }
               },
             ),
-            const SizedBox(height: 15),
-            Center(
-              child: ElevatedButton.icon(
-                onPressed: _copyToClipboard,
-                icon: const Icon(Icons.copy),
-                label: const Text('Copy to Clipboard'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
+            const SizedBox(height: textAreaSpacing),
+            ElevatedButton.icon(
+              onPressed: _copyToClipboard,
+              icon: const Icon(Icons.copy),
+              label: const Text('Copy to Clipboard'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
             ),
           ],
@@ -328,22 +336,23 @@ class _TableEditorPageState extends State<TableEditorPage> {
                       });
                     },
 child: SizedBox(
-  width: columnWidth,
-                      child: isPreviewMode
-                          ? MarkdownBody(
-                              data: tableData[0][index],
-                              styleSheet: MarkdownStyleSheet(
-                                p: TextStyle(fontSize: 14),
-                              ),
-                            )
-                          : TextField(
+  width: tableCellWidth,
+                            child: isPreviewMode
+                                ? MarkdownBody(
+                                    data: tableData[0][index],
+                                    styleSheet: MarkdownStyleSheet(
+                                      p: TextStyle(fontSize: tableCellFontSize),
+                                    ),
+                                  )
+                                : TextField(
                               controller: cellControllers[0][index],
                               focusNode: cellFocusNodes[0][index],
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 isDense: true,
+                                contentPadding: EdgeInsets.all(tableCellPadding),
                               ),
-                              style: const TextStyle(overflow: TextOverflow.ellipsis),
+                              style: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
                             ),
                     ),
                   ),
@@ -370,12 +379,12 @@ child: SizedBox(
                             });
                           },
                           child: SizedBox(
-                            width: columnWidth,
+                            width: tableCellWidth,
                             child: isPreviewMode
                                 ? MarkdownBody(
                                     data: tableData[actualRowIndex][colIndex],
                                     styleSheet: MarkdownStyleSheet(
-                                      p: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                      p: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
                                     ),
                                     onTapLink: (text, href, title) async {
                                       if (href != null) {
@@ -392,8 +401,9 @@ child: SizedBox(
                                     decoration: const InputDecoration(
                                       border: InputBorder.none,
                                       isDense: true,
+                                      contentPadding: EdgeInsets.all(tableCellPadding),
                                     ),
-                                    style: const TextStyle(overflow: TextOverflow.ellipsis),
+                                    style: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
                                   ),
                           ),
                         ),
@@ -410,38 +420,47 @@ child: SizedBox(
   }
 
   Widget _buildTableControls() {
-    return Wrap(
-      spacing: 10,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ElevatedButton(
-          onPressed: _addRow,
-          child: const Text('Add Row'),
-        ),
-        ElevatedButton(
-          onPressed: _addColumn,
-          child: const Text('Add Column'),
-        ),
-        ElevatedButton(
-          onPressed: _deleteRow,
-          child: const Text('Delete Row'),
-        ),
-        ElevatedButton(
-          onPressed: _deleteColumn,
-          child: const Text('Delete Column'),
-        ),
-        ElevatedButton(
-          onPressed: _clearTable,
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          child: const Text('Clear Table', style: TextStyle(color: Colors.white)),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              isPreviewMode = !isPreviewMode;
-            });
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: isPreviewMode ? Colors.grey : Colors.blue),
-          child: Text(isPreviewMode ? 'Preview Mode' : 'Edit Mode', style: TextStyle(color: Colors.white)),
+        const Divider(height: 20, thickness: 1, color: Colors.grey),
+        Wrap(
+          alignment: WrapAlignment.start,
+          spacing: 10,
+          children: [
+            ActionChip(
+              label: const Text('Add Row', style: TextStyle(fontSize: actionChipFontSize)),
+              onPressed: _addRow,
+            ),
+            ActionChip(
+              label: const Text('Add Column', style: TextStyle(fontSize: actionChipFontSize)),
+              onPressed: _addColumn,
+            ),
+            ActionChip(
+              label: const Text('Delete Row', style: TextStyle(fontSize: actionChipFontSize)),
+              onPressed: _deleteRow,
+            ),
+            ActionChip(
+              label: const Text('Delete Column', style: TextStyle(fontSize: actionChipFontSize)),
+              onPressed: _deleteColumn,
+            ),
+            ActionChip(
+              label: const Text('Clear Table', style: TextStyle(fontSize: actionChipFontSize)),
+              backgroundColor: Colors.red,
+              labelStyle: const TextStyle(color: Colors.white, fontSize: actionChipFontSize),
+              onPressed: _clearTable,
+            ),
+            ActionChip(
+              label: Text(isPreviewMode ? 'Preview Mode' : 'Edit Mode', style: TextStyle(fontSize: actionChipFontSize)),
+              backgroundColor: isPreviewMode ? Colors.grey : Colors.blue,
+              labelStyle: const TextStyle(color: Colors.white, fontSize: actionChipFontSize),
+              onPressed: () {
+                setState(() {
+                  isPreviewMode = !isPreviewMode;
+                });
+              },
+            ),
+          ],
         ),
       ],
     );
