@@ -1,0 +1,60 @@
+# Flutter/Dart related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+flutter_*.png
+flutter_export_environment.sh
+
+# Android related
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/gradlew
+android/gradlew.bat
+android/gradle/wrapper/gradle-wrapper.jar
+
+# iOS related
+ios/.build/
+ios/build/
+ios/Pods/
+ios/Podfile.lock
+ios/Flutter/ephemeral/
+ios/Runner.xcworkspace/xcuserdata/
+ios/Runner.xcodeproj/xcuserdata/
+
+# macOS related
+macos/.build/
+macos/build/
+macos/Pods/
+macos/Podfile.lock
+macos/Flutter/ephemeral/
+macos/Runner.xcworkspace/xcuserdata/
+macos/Runner.xcodeproj/xcuserdata/
+
+# Windows related
+windows/build/
+windows/flutter/ephemeral/
+
+# Linux related
+linux/build/
+linux/flutter/ephemeral/
+
+# Web related
+web/build/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+.env
+*.log
