@@ -5,20 +5,51 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'data_parser.dart';
 
- // Constants for dimensions
-const double columnWidth = 150.0;
+// Strings
+const String appTitle = 'Markdown Table Editor';
+
+// Color constants
+const Color appBarBackgroundColor = Color(0xFF171717);
+const Color appBarIconColor = Color(0xFFFAFAFA);
+const Color appBarTextColor = Color(0xFFFAFAFA);
+const Color backgroundColor = Color(0xFF0A0A0A);
+const Color buttonBackgroundColor = Color(0xFF212121);
+const Color buttonBorderColor = Color(0xFF3A3A3A);
+const Color buttonHighlightedBackgroundColor = Color(0xFFE5E5E5);
+const Color buttonHighlightedBorderColor = Color(0xFF717171);
+const Color buttonTextColor = Color(0xFFF0F0F0);
+const Color cardBackgroundColor = Color(0xFF171717);
+const Color cardBorderColor = Color(0xFF2E2E2E);
+const Color cardTitleTextColor = Color(0xFFF6F6F6);
+const Color dropdownBackgroundColor = Color(0xFF212121);
+const Color dropdownBorderColor = Color(0xFF434343);
+const Color dropdownTextColor = Color(0xFFFAFAFA);
+const Color headerBackgroundColor = Color(0xFF1F1F1F);
+const Color headerTextColor = Color(0xFFFAFAFA);
+const Color placeholderTextColor = Color(0xFFA1A1A1);
+const Color tableBorderColor = Color(0xFF2E2E2E);
+const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F);
+const Color tableHeaderTextColor = Color(0xFFFAFAFA);
+const Color tableNormalCellBackgroundColor = Color(0xFF171717);
+const Color tableTextColor = Color(0xFFF9F9F9);
+const Color textAreaBackgroundColor = Color(0xFF212121);
+const Color textAreaBorderBackgroundColor = Color(0xFF212121);
+const Color textAreaTextColor = Color(0xFFA1A1A1);
+
+// Constants for dimensions
+const double actionChipFontSize = 12.0;
+const double buttonBorderRadius = 4.0;
 const int initialHeaders = 3;
 const int snackbarDurationSeconds = 2;
-const double syncIconSize = 40.0;
+const double syncIconSize = 35.0;
+const double tableCellFontSize = 12.0;
+const double tableCellPadding = 4.0;
+const double tableCellWidth = 100.0;
 const double tableHeight = 160.0;
 const double tableIconSize = 35.0;
-const double actionChipFontSize = 12.0;
-const double tableCellPadding = 4.0;
-const double tableCellFontSize = 12.0;
-const double tableCellWidth = 100.0;
 const double textAreaFontSize = 10.0;
-const double textAreaSpacing = 10.0;
 const int textAreaHeight = 3;
+const double textAreaSpacing = 10.0;
 
 List<List<String>> tableData = [
   ['**Header 1**', '**Header 2**', '**Header 3**'],
@@ -36,10 +67,40 @@ class TableEditorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Markdown Table Editor',
+      title: appTitle,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
         useMaterial3: true,
+        scaffoldBackgroundColor: backgroundColor,
+        cardColor: cardBackgroundColor,
+        dividerColor: cardBorderColor,
+        textTheme: const TextTheme(
+          headlineSmall: TextStyle(color: cardTitleTextColor),
+          bodyMedium: TextStyle(color: tableTextColor),
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          fillColor: textAreaBackgroundColor,
+          border: OutlineInputBorder(borderSide: BorderSide(color: textAreaBorderBackgroundColor)),
+          hintStyle: TextStyle(color: placeholderTextColor),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: buttonBackgroundColor,
+            foregroundColor: tableTextColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(buttonBorderRadius),
+              side: BorderSide(color: buttonBorderColor),
+            ),
+          ),
+        ),
+        dataTableTheme: DataTableThemeData(
+          headingRowColor: MaterialStateProperty.all(tableHeaderCellBackgroundColor),
+          dataRowColor: MaterialStateProperty.all(tableNormalCellBackgroundColor),
+          headingTextStyle: TextStyle(color: tableHeaderTextColor),
+          dataTextStyle: TextStyle(color: tableTextColor),
+          dividerThickness: 1.0,
+          decoration: BoxDecoration(border: Border.all(color: tableBorderColor)),
+        ),
       ),
       home: const TableEditorPage(),
     );
@@ -134,23 +195,23 @@ class _TableEditorPageState extends State<TableEditorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: appBarBackgroundColor,
         title: Align(
           alignment: Alignment.centerLeft,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset(
-                'images/table_icon.svg',
-                width: tableIconSize,
-                height: tableIconSize,
-                colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.onSurface,
-                  BlendMode.srcIn,
+                SvgPicture.asset(
+                  'images/table_icon.svg',
+                  width: syncIconSize,
+                  height: syncIconSize,
+                  colorFilter: ColorFilter.mode(
+                    appBarIconColor,
+                    BlendMode.srcIn,
+                  ),
                 ),
-              ),
               const SizedBox(width: 8),
-              const Text('Markdown Table Editor'),
+              const Text(appTitle, style: TextStyle(color: appBarTextColor)),
             ],
           ),
         ),
@@ -174,7 +235,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                   width: syncIconSize,
                   height: syncIconSize,
                   colorFilter: ColorFilter.mode(
-                    Colors.green,
+                    buttonHighlightedBackgroundColor,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -190,6 +251,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
 
   Widget _buildTableCard() {
     return Card(
+      color: cardBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -197,14 +259,14 @@ class _TableEditorPageState extends State<TableEditorPage> {
           children: [
             Row(
               children: [
-                Icon(Icons.table_chart, color: Colors.green),
+                Icon(Icons.table_chart, color: buttonHighlightedBackgroundColor),
                 const SizedBox(width: 12),
                 Text(
                   'Table',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                  ),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: cardTitleTextColor,
+                  fontWeight: FontWeight.bold,
+                ),
                 ),
               ],
             ),
@@ -220,6 +282,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
 
   Widget _buildTextCard() {
     return Card(
+      color: cardBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -227,12 +290,12 @@ class _TableEditorPageState extends State<TableEditorPage> {
           children: [
             Row(
               children: [
-                Icon(Icons.text_fields, color: Colors.green),
+                Icon(Icons.text_fields, color: buttonHighlightedBackgroundColor),
                 const SizedBox(width: 12),
                 Text(
                   'Text',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Colors.green,
+                    color: cardTitleTextColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -245,6 +308,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 const SizedBox(width: 10),
                 DropdownButton<DataFormat>(
                   value: selectedExportFormat,
+                  style: const TextStyle(color: dropdownTextColor),
+                  dropdownColor: dropdownBackgroundColor,
+                  
                   onChanged: (DataFormat? newValue) {
                     if (newValue != null) {
                       setState(() {
@@ -268,12 +334,12 @@ class _TableEditorPageState extends State<TableEditorPage> {
               maxLines: textAreaHeight,
               decoration: const InputDecoration(
                 hintText: 'Paste data here to import or edit text directly. Supports Markdown, CSV, and Google Sheets formats.',
-                hintStyle: TextStyle(color: Colors.grey),
+                hintStyle: TextStyle(color: textAreaTextColor),
                 border: OutlineInputBorder(),
                 filled: true,
-                fillColor: Color(0xFFF5F5F5),
+                fillColor: textAreaBackgroundColor,
               ),
-              style: const TextStyle(fontFamily: 'monospace', fontSize: textAreaFontSize),
+              style: const TextStyle(fontFamily: 'monospace', fontSize: textAreaFontSize, color: textAreaTextColor),
               onChanged: (value) {
                 if (value.trim().isNotEmpty) {
                   _handlePastedData(value.trim());
@@ -294,9 +360,13 @@ class _TableEditorPageState extends State<TableEditorPage> {
               icon: const Icon(Icons.copy),
               label: const Text('Copy to Clipboard'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
+                backgroundColor: buttonBackgroundColor,
+                foregroundColor: tableTextColor,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(buttonBorderRadius),
+                  side: BorderSide(color: buttonBorderColor),
+                ),
               ),
             ),
           ],
@@ -319,7 +389,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
             controller: _horizontalScrollController,
             scrollDirection: Axis.horizontal,
             child: DataTable(
-              border: TableBorder.all(color: Colors.grey),
+              border: TableBorder.all(color: tableBorderColor),
               columns: List.generate(
                 tableData[0].length,
                 (index) => DataColumn(
@@ -337,24 +407,29 @@ class _TableEditorPageState extends State<TableEditorPage> {
                     },
 child: SizedBox(
   width: tableCellWidth,
-                            child: isPreviewMode
-                                ? MarkdownBody(
-                                    data: tableData[0][index],
-                                    styleSheet: MarkdownStyleSheet(
-                                      p: TextStyle(fontSize: tableCellFontSize),
-                                    ),
-                                  )
-                                : TextField(
-                              controller: cellControllers[0][index],
-                              focusNode: cellFocusNodes[0][index],
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                isDense: true,
-                                contentPadding: EdgeInsets.all(tableCellPadding),
-                              ),
-                              style: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
-                            ),
-                    ),
+  child: isPreviewMode
+      ? MarkdownBody(
+          data: tableData[0][index],
+          styleSheet: MarkdownStyleSheet(
+            p: TextStyle(fontSize: tableCellFontSize),
+          ),
+        )
+      : TextField(
+          controller: cellControllers[0][index],
+          focusNode: cellFocusNodes[0][index],
+          decoration: const InputDecoration(
+            border: InputBorder.none,
+            isDense: true,
+            contentPadding: EdgeInsets.all(tableCellPadding),
+          ),
+          style: TextStyle(
+            fontSize: tableCellFontSize,
+            overflow: TextOverflow.ellipsis,
+            color: cellControllers[0][index].text.contains('**') ? tableHeaderTextColor : tableTextColor,
+            fontWeight: cellControllers[0][index].text.contains('**') ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+),
                   ),
                 ),
               ),
@@ -403,7 +478,12 @@ child: SizedBox(
                                       isDense: true,
                                       contentPadding: EdgeInsets.all(tableCellPadding),
                                     ),
-                                    style: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
+                                    style: TextStyle(
+                                      fontSize: tableCellFontSize,
+                                      overflow: TextOverflow.ellipsis,
+                                      color: cellControllers[actualRowIndex][colIndex].text.contains('**') ? tableHeaderTextColor : tableTextColor,
+                                      fontWeight: cellControllers[actualRowIndex][colIndex].text.contains('**') ? FontWeight.bold : FontWeight.normal,
+                                    ),
                                   ),
                           ),
                         ),
@@ -429,36 +509,68 @@ child: SizedBox(
           spacing: 10,
           children: [
             ActionChip(
-              label: const Text('Add Row', style: TextStyle(fontSize: actionChipFontSize)),
+              label: const Text('Add Row', style: TextStyle(fontSize: actionChipFontSize, color: buttonTextColor)),
               onPressed: _addRow,
+              backgroundColor: buttonBackgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(buttonBorderRadius),
+                side: BorderSide(color: buttonBorderColor),
+              ),
+              
             ),
             ActionChip(
-              label: const Text('Add Column', style: TextStyle(fontSize: actionChipFontSize)),
+              label: const Text('Add Column', style: TextStyle(fontSize: actionChipFontSize, color: buttonTextColor)),
               onPressed: _addColumn,
+              backgroundColor: buttonBackgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(buttonBorderRadius),
+                side: BorderSide(color: buttonBorderColor),
+              ),
+
             ),
             ActionChip(
-              label: const Text('Delete Row', style: TextStyle(fontSize: actionChipFontSize)),
+              label: const Text('Delete Row', style: TextStyle(fontSize: actionChipFontSize, color: buttonTextColor)),
               onPressed: _deleteRow,
+              backgroundColor: buttonBackgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(buttonBorderRadius),
+                side: BorderSide(color: buttonBorderColor),
+              ),
+
             ),
             ActionChip(
-              label: const Text('Delete Column', style: TextStyle(fontSize: actionChipFontSize)),
+              label: const Text('Delete Column', style: TextStyle(fontSize: actionChipFontSize, color: buttonTextColor)),
               onPressed: _deleteColumn,
+              backgroundColor: buttonBackgroundColor,
+                shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(buttonBorderRadius),
+                side: BorderSide(color: buttonBorderColor),
+              ),
+
             ),
             ActionChip(
               label: const Text('Clear Table', style: TextStyle(fontSize: actionChipFontSize)),
               backgroundColor: Colors.red,
-              labelStyle: const TextStyle(color: Colors.white, fontSize: actionChipFontSize),
+              labelStyle: const TextStyle(color: tableTextColor, fontSize: actionChipFontSize),
               onPressed: _clearTable,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(buttonBorderRadius),
+                side: BorderSide(color: buttonBorderColor),
+              ),
             ),
             ActionChip(
               label: Text(isPreviewMode ? 'Preview Mode' : 'Edit Mode', style: TextStyle(fontSize: actionChipFontSize)),
-              backgroundColor: isPreviewMode ? Colors.grey : Colors.blue,
-              labelStyle: const TextStyle(color: Colors.white, fontSize: actionChipFontSize),
+              backgroundColor: isPreviewMode ? Colors.grey : buttonHighlightedBackgroundColor,
+              labelStyle: const TextStyle(color: tableTextColor, fontSize: actionChipFontSize),
               onPressed: () {
                 setState(() {
                   isPreviewMode = !isPreviewMode;
                 });
               },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(buttonBorderRadius),
+                side: BorderSide(color: buttonBorderColor),
+              ),
             ),
           ],
         ),
