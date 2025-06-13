@@ -21,6 +21,7 @@ const Color buttonTextColor = Color(0xFFF0F0F0);
 const Color cardBackgroundColor = Color(0xFF171717);
 const Color cardBorderColor = Color(0xFF2E2E2E);
 const Color cardTitleTextColor = Color(0xFFF6F6F6);
+const Color dividerColor = Color(0xFF2E2E2E);
 const Color dropdownBackgroundColor = Color(0xFF212121);
 const Color dropdownBorderColor = Color(0xFF434343);
 const Color dropdownTextColor = Color(0xFFFAFAFA);
@@ -28,7 +29,7 @@ const Color headerBackgroundColor = Color(0xFF1F1F1F);
 const Color headerTextColor = Color(0xFFFAFAFA);
 const Color placeholderTextColor = Color(0xFFA1A1A1);
 const Color tableBorderColor = Color(0xFF2E2E2E);
-const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F);
+const Color tableHeadingBackgroundColor = Color(0xFF1F1F1F);
 const Color tableHeaderTextColor = Color(0xFFFAFAFA);
 const Color tableNormalCellBackgroundColor = Color(0xFF171717);
 const Color tableTextColor = Color(0xFFF9F9F9);
@@ -38,14 +39,23 @@ const Color textAreaTextColor = Color(0xFFA1A1A1);
 
 // Constants for dimensions
 const double actionChipFontSize = 12.0;
+const double appTitleFontSize = 24.0;
 const double buttonBorderRadius = 4.0;
+const double cardPadding = 20.0;
+const double cardTitleFontSize = 18.0;
+const double cardTitleIconSize = 24.0;
 const int initialHeaders = 3;
 const int snackbarDurationSeconds = 2;
 const double syncIconSize = 35.0;
+const double tableBorderRadius = 10.0;
 const double tableCellFontSize = 12.0;
-const double tableCellPadding = 4.0;
+const double tableCellPadding = 0.0;
+const double tableCellHeight = 20.0;
 const double tableCellWidth = 100.0;
-const double tableHeight = 160.0;
+const double tableDataRowMinHeight = 10.0;  
+const double tableDataRowMaxHeight = 40.0;
+const double tableHeadingRowHeight = 30.0;
+const double tableHeight = 120.0;
 const double tableIconSize = 35.0;
 const double textAreaFontSize = 10.0;
 const int textAreaHeight = 3;
@@ -61,6 +71,22 @@ void main() {
   runApp(const TableEditorApp());
 }
 
+class TableEditorActionChip extends ActionChip {
+  TableEditorActionChip({
+    super.key,
+    required String label,
+    required VoidCallback onPressed,
+  }) : super(
+          label: Text(label, style: TextStyle(fontSize: actionChipFontSize, color: buttonTextColor)),
+          onPressed: onPressed,
+          backgroundColor: buttonBackgroundColor,
+          side: BorderSide(color: buttonBorderColor),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(buttonBorderRadius),
+          ),
+        );
+}
+
 class TableEditorApp extends StatelessWidget {
   const TableEditorApp({super.key});
 
@@ -73,7 +99,7 @@ class TableEditorApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: backgroundColor,
         cardColor: cardBackgroundColor,
-        dividerColor: cardBorderColor,
+        dividerColor: dividerColor,
         textTheme: const TextTheme(
           headlineSmall: TextStyle(color: cardTitleTextColor),
           bodyMedium: TextStyle(color: tableTextColor),
@@ -94,7 +120,7 @@ class TableEditorApp extends StatelessWidget {
           ),
         ),
         dataTableTheme: DataTableThemeData(
-          headingRowColor: MaterialStateProperty.all(tableHeaderCellBackgroundColor),
+          headingRowColor: MaterialStateProperty.all(tableHeadingBackgroundColor),
           dataRowColor: MaterialStateProperty.all(tableNormalCellBackgroundColor),
           headingTextStyle: TextStyle(color: tableHeaderTextColor),
           dataTextStyle: TextStyle(color: tableTextColor),
@@ -211,7 +237,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                   ),
                 ),
               const SizedBox(width: 8),
-              const Text(appTitle, style: TextStyle(color: appBarTextColor)),
+              const Text(appTitle, style: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold, fontSize: appTitleFontSize)),
             ],
           ),
         ),
@@ -253,19 +279,20 @@ class _TableEditorPageState extends State<TableEditorPage> {
     return Card(
       color: cardBackgroundColor,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(Icons.table_chart, color: buttonHighlightedBackgroundColor),
+                Icon(Icons.table_chart, color: cardTitleTextColor, size: cardTitleIconSize),
                 const SizedBox(width: 12),
                 Text(
                   'Table',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: cardTitleTextColor,
                   fontWeight: FontWeight.bold,
+                  fontSize: cardTitleFontSize
                 ),
                 ),
               ],
@@ -284,19 +311,20 @@ class _TableEditorPageState extends State<TableEditorPage> {
     return Card(
       color: cardBackgroundColor,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(Icons.text_fields, color: buttonHighlightedBackgroundColor),
+                Icon(Icons.text_fields, color: cardTitleTextColor, size: cardTitleIconSize),
                 const SizedBox(width: 12),
                 Text(
                   'Text',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: cardTitleTextColor,
                     fontWeight: FontWeight.bold,
+                    fontSize: cardTitleFontSize
                   ),
                 ),
               ],
@@ -382,6 +410,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
 
     return SizedBox(
       height: tableHeight, // Set a reasonable maximum height for the table
+    
       child: ClipRect(
         child: SingleChildScrollView(
           controller: _verticalScrollController,
@@ -389,7 +418,11 @@ class _TableEditorPageState extends State<TableEditorPage> {
             controller: _horizontalScrollController,
             scrollDirection: Axis.horizontal,
             child: DataTable(
-              border: TableBorder.all(color: tableBorderColor),
+              headingRowHeight: tableHeadingRowHeight,
+              dataRowMinHeight: tableDataRowMinHeight,
+              dataRowMaxHeight: tableDataRowMaxHeight,
+              headingRowColor: MaterialStateProperty.all(tableHeadingBackgroundColor),
+              border: TableBorder.all(color: tableBorderColor, borderRadius: BorderRadius.circular(tableBorderRadius)),
               columns: List.generate(
                 tableData[0].length,
                 (index) => DataColumn(
@@ -407,6 +440,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                     },
 child: SizedBox(
   width: tableCellWidth,
+  height: tableCellHeight,
   child: isPreviewMode
       ? MarkdownBody(
           data: tableData[0][index],
@@ -455,6 +489,7 @@ child: SizedBox(
                           },
                           child: SizedBox(
                             width: tableCellWidth,
+                            height: tableCellHeight,
                             child: isPreviewMode
                                 ? MarkdownBody(
                                     data: tableData[actualRowIndex][colIndex],
@@ -499,79 +534,27 @@ child: SizedBox(
     );
   }
 
+
   Widget _buildTableControls() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Divider(height: 20, thickness: 1, color: Colors.grey),
+        const Divider(height: 40, thickness: 1, color: dividerColor),
         Wrap(
           alignment: WrapAlignment.start,
           spacing: 10,
+          runSpacing: 10,
           children: [
-            ActionChip(
-              label: const Text('Add Row', style: TextStyle(fontSize: actionChipFontSize, color: buttonTextColor)),
-              onPressed: _addRow,
-              backgroundColor: buttonBackgroundColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(buttonBorderRadius),
-                side: BorderSide(color: buttonBorderColor),
-              ),
-              
-            ),
-            ActionChip(
-              label: const Text('Add Column', style: TextStyle(fontSize: actionChipFontSize, color: buttonTextColor)),
-              onPressed: _addColumn,
-              backgroundColor: buttonBackgroundColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(buttonBorderRadius),
-                side: BorderSide(color: buttonBorderColor),
-              ),
-
-            ),
-            ActionChip(
-              label: const Text('Delete Row', style: TextStyle(fontSize: actionChipFontSize, color: buttonTextColor)),
-              onPressed: _deleteRow,
-              backgroundColor: buttonBackgroundColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(buttonBorderRadius),
-                side: BorderSide(color: buttonBorderColor),
-              ),
-
-            ),
-            ActionChip(
-              label: const Text('Delete Column', style: TextStyle(fontSize: actionChipFontSize, color: buttonTextColor)),
-              onPressed: _deleteColumn,
-              backgroundColor: buttonBackgroundColor,
-                shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(buttonBorderRadius),
-                side: BorderSide(color: buttonBorderColor),
-              ),
-
-            ),
-            ActionChip(
-              label: const Text('Clear Table', style: TextStyle(fontSize: actionChipFontSize)),
-              backgroundColor: Colors.red,
-              labelStyle: const TextStyle(color: tableTextColor, fontSize: actionChipFontSize),
-              onPressed: _clearTable,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(buttonBorderRadius),
-                side: BorderSide(color: buttonBorderColor),
-              ),
-            ),
-            ActionChip(
-              label: Text(isPreviewMode ? 'Preview Mode' : 'Edit Mode', style: TextStyle(fontSize: actionChipFontSize)),
-              backgroundColor: isPreviewMode ? Colors.grey : buttonHighlightedBackgroundColor,
-              labelStyle: const TextStyle(color: tableTextColor, fontSize: actionChipFontSize),
-              onPressed: () {
-                setState(() {
-                  isPreviewMode = !isPreviewMode;
-                });
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(buttonBorderRadius),
-                side: BorderSide(color: buttonBorderColor),
-              ),
-            ),
+            TableEditorActionChip(label: 'Add Row', onPressed: _addRow),
+            TableEditorActionChip(label: 'Add Column', onPressed: _addColumn),
+            TableEditorActionChip(label: 'Delete Row', onPressed: _deleteRow),
+            TableEditorActionChip(label: 'Delete Column', onPressed: _deleteColumn),
+            TableEditorActionChip(label: 'Clear Table', onPressed: _clearTable),
+            TableEditorActionChip(label: 'Preview Mode', onPressed: () {
+              setState(() {
+                isPreviewMode = !isPreviewMode;
+              });
+            }),
           ],
         ),
       ],
