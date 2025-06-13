@@ -10,6 +10,7 @@ const String appTitle = 'Markdown Table Editor';
 
 // Color constants
 const Color appBarBackgroundColor = Color(0xFF171717);
+const Color appBarSurfaceTintColor = Colors.blue;
 const Color appBarIconColor = Color(0xFFFAFAFA);
 const Color appBarTextColor = Color(0xFFFAFAFA);
 const Color backgroundColor = Color(0xFF0A0A0A);
@@ -39,6 +40,7 @@ const Color tableTextColor = Color(0xFFF9F9F9);
 const Color textAreaBackgroundColor = Color(0xFF212121);
 const Color textAreaBorderBackgroundColor = Color(0xFF212121);
 const Color textAreaTextColor = Color(0xFFA1A1A1);
+const Color switchTextColor = Color(0xFFFAFAFA);
 
 // Constants for dimensions
 const double actionChipFontSize = 12.0;
@@ -49,8 +51,9 @@ const double cardTitleFontSize = 18.0;
 const double cardTitleIconSize = 20.0;
 const int initialHeaders = 3;
 const int snackbarDurationSeconds = 2;
+const double switchFontSize = 12.0;
 const double syncIconSize = 35.0;
-const double tableBorderRadius = 10.0;
+const double tableBorderRadius = 0.0;
 const double tableCellFontSize = 12.0;
 const double tableCellPadding = 0.0;
 const double tableCellHeight = 20.0;
@@ -226,6 +229,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appBarBackgroundColor,
+        surfaceTintColor: appBarSurfaceTintColor,
         title: Align(
           alignment: Alignment.centerLeft,
           child: Row(
@@ -292,7 +296,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 Icon(Icons.table_chart, color: cardTitleTextColor, size: cardTitleIconSize),
                 const SizedBox(width: 12),
                 Text(
-                  'Table',
+                  'Edit Table',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: cardTitleTextColor,
                   fontWeight: FontWeight.bold,
@@ -324,7 +328,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 Icon(Icons.text_fields, color: cardTitleTextColor, size: cardTitleIconSize),
                 const SizedBox(width: 12),
                 Text(
-                  'Text',
+                  'Markup',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: cardTitleTextColor,
                     fontWeight: FontWeight.bold,
@@ -551,15 +555,31 @@ child: SizedBox(
           runSpacing: 10,
           children: [
             TableEditorActionChip(label: 'Add Row', onPressed: _addRow),
-            TableEditorActionChip(label: 'Add Column', onPressed: _addColumn),
+            TableEditorActionChip(label: 'Add Col', onPressed: _addColumn),
             TableEditorActionChip(label: 'Delete Row', onPressed: _deleteRow),
-            TableEditorActionChip(label: 'Delete Column', onPressed: _deleteColumn),
+            TableEditorActionChip(label: 'Delete Col', onPressed: _deleteColumn),
             TableEditorActionChip(label: 'Clear Table', onPressed: _clearTable),
-            TableEditorActionChip(label: isPreviewMode ? 'Preview Mode' : 'Edit Mode', onPressed: () {
-              setState(() {
-                isPreviewMode = !isPreviewMode;
-              });
-            }),
+            Row(
+              children: [
+                Text(
+                  isPreviewMode ? 'Preview Mode' : 'Edit Mode',
+                  style: TextStyle(color: switchTextColor, fontSize: switchFontSize),
+                ),
+                const SizedBox(width: 8),
+                Switch(
+                  value: isPreviewMode,
+                  onChanged: (value) {
+                    setState(() {
+                      isPreviewMode = value;
+                    });
+                  },
+                  activeColor: buttonHighlightedBackgroundColor,
+                  activeTrackColor: buttonBackgroundColor,
+                  inactiveThumbColor: buttonTextColor,
+                  inactiveTrackColor: buttonBorderColor,
+                ),
+              ],
+            ),
           ],
         ),
       ],
