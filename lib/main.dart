@@ -28,7 +28,10 @@ const Color dropdownTextColor = Color(0xFFFAFAFA);
 const Color headerBackgroundColor = Color(0xFF1F1F1F);
 const Color headerTextColor = Color(0xFFFAFAFA);
 const Color placeholderTextColor = Color(0xFFA1A1A1);
+// Add new colors for DataTable row border and heading background
 const Color tableBorderColor = Color(0xFF2E2E2E);
+const Color tableDataRowColor = Color(0xFF2E2E2E);
+const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F);
 const Color tableHeadingBackgroundColor = Color(0xFF1F1F1F);
 const Color tableHeaderTextColor = Color(0xFFFAFAFA);
 const Color tableNormalCellBackgroundColor = Color(0xFF171717);
@@ -43,7 +46,7 @@ const double appTitleFontSize = 24.0;
 const double buttonBorderRadius = 4.0;
 const double cardPadding = 20.0;
 const double cardTitleFontSize = 18.0;
-const double cardTitleIconSize = 24.0;
+const double cardTitleIconSize = 20.0;
 const int initialHeaders = 3;
 const int snackbarDurationSeconds = 2;
 const double syncIconSize = 35.0;
@@ -57,7 +60,7 @@ const double tableDataRowMaxHeight = 40.0;
 const double tableHeadingRowHeight = 30.0;
 const double tableHeight = 120.0;
 const double tableIconSize = 35.0;
-const double textAreaFontSize = 10.0;
+const double textAreaFontSize = 12.0;
 const int textAreaHeight = 3;
 const double textAreaSpacing = 10.0;
 
@@ -119,13 +122,14 @@ class TableEditorApp extends StatelessWidget {
             ),
           ),
         ),
+// Update DataTable theme to use tableDataRowColor for row borders
         dataTableTheme: DataTableThemeData(
-          headingRowColor: MaterialStateProperty.all(tableHeadingBackgroundColor),
+          headingRowColor: MaterialStateProperty.all(tableHeaderCellBackgroundColor),
           dataRowColor: MaterialStateProperty.all(tableNormalCellBackgroundColor),
           headingTextStyle: TextStyle(color: tableHeaderTextColor),
           dataTextStyle: TextStyle(color: tableTextColor),
           dividerThickness: 1.0,
-          decoration: BoxDecoration(border: Border.all(color: tableBorderColor)),
+          decoration: BoxDecoration(border: Border.all(color: tableDataRowColor)),
         ),
       ),
       home: const TableEditorPage(),
@@ -299,7 +303,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
             ),
             const SizedBox(height: 20),
             _buildTable(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             _buildTableControls(),
           ],
         ),
@@ -539,7 +543,8 @@ child: SizedBox(
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Divider(height: 40, thickness: 1, color: dividerColor),
+        const Divider(height: 1, thickness: 1, color: dividerColor),
+        const SizedBox(height: 20),
         Wrap(
           alignment: WrapAlignment.start,
           spacing: 10,
@@ -550,7 +555,7 @@ child: SizedBox(
             TableEditorActionChip(label: 'Delete Row', onPressed: _deleteRow),
             TableEditorActionChip(label: 'Delete Column', onPressed: _deleteColumn),
             TableEditorActionChip(label: 'Clear Table', onPressed: _clearTable),
-            TableEditorActionChip(label: 'Preview Mode', onPressed: () {
+            TableEditorActionChip(label: isPreviewMode ? 'Preview Mode' : 'Edit Mode', onPressed: () {
               setState(() {
                 isPreviewMode = !isPreviewMode;
               });
