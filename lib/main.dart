@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'data_parser.dart';
 
 // Strings
@@ -52,7 +53,7 @@ const double cardTitleIconSize = 20.0;
 const int initialHeaders = 3;
 const int snackbarDurationSeconds = 2;
 const double switchFontSize = 12.0;
-const double syncIconSize = 35.0;
+const double syncIconSize = 40.0;
 const double tableBorderRadius = 0.0;
 const double tableCellFontSize = 12.0;
 const double tableCellPadding = 0.0;
@@ -66,6 +67,8 @@ const double tableIconSize = 35.0;
 const double textAreaFontSize = 12.0;
 const int textAreaHeight = 3;
 const double textAreaSpacing = 10.0;
+const double introFontSize = 20.0;
+const Color introFontColor = Color.fromARGB(255, 116, 114, 114);
 
 List<List<String>> tableData = [
   ['**Header 1**', '**Header 2**', '**Header 3**'],
@@ -90,6 +93,7 @@ class TableEditorActionChip extends ActionChip {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(buttonBorderRadius),
           ),
+          padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4.0),
         );
 }
 
@@ -106,9 +110,11 @@ class TableEditorApp extends StatelessWidget {
         scaffoldBackgroundColor: backgroundColor,
         cardColor: cardBackgroundColor,
         dividerColor: dividerColor,
-        textTheme: const TextTheme(
-          headlineSmall: TextStyle(color: cardTitleTextColor),
-          bodyMedium: TextStyle(color: tableTextColor),
+        textTheme: GoogleFonts.poppinsTextTheme(
+          const TextTheme(
+            headlineSmall: TextStyle(color: cardTitleTextColor),
+            bodyMedium: TextStyle(color: tableTextColor),
+          ),
         ),
         inputDecorationTheme: const InputDecorationTheme(
           fillColor: textAreaBackgroundColor,
@@ -261,10 +267,31 @@ class _TableEditorPageState extends State<TableEditorPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Row(
+                children: [
+                  const SizedBox(width: 25),
+                  Flexible(
+                    child: Text(
+                      'Edit your Markdown tables with ease. All data stays private in your browser.',
+                      style: GoogleFonts.roboto(
+                        fontSize: introFontSize,
+                        color: introFontColor,
+                        fontWeight: FontWeight.w300
+                      ),
+                      textAlign: TextAlign.left,
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
               _buildTableCard(),
               const SizedBox(height: 10),
-              Center(
-                child: SvgPicture.asset(
+              Row(
+                children: 
+                [const SizedBox(width: 100),
+                  SvgPicture.asset(
                   'images/sync.svg',
                   width: syncIconSize,
                   height: syncIconSize,
@@ -272,10 +299,13 @@ class _TableEditorPageState extends State<TableEditorPage> {
                     buttonHighlightedBackgroundColor,
                     BlendMode.srcIn,
                   ),
-                ),
+                )
+                ],
               ),
               const SizedBox(height: 10),
               _buildTextCard(),
+              const SizedBox(height: 20),
+              _buildFooter(),
             ],
           ),
         ),
@@ -296,7 +326,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 Icon(Icons.table_chart, color: cardTitleTextColor, size: cardTitleIconSize),
                 const SizedBox(width: 12),
                 Text(
-                  'Edit Table',
+                  'Edit',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: cardTitleTextColor,
                   fontWeight: FontWeight.bold,
@@ -328,7 +358,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 Icon(Icons.text_fields, color: cardTitleTextColor, size: cardTitleIconSize),
                 const SizedBox(width: 12),
                 Text(
-                  'Markup',
+                  'Import / Export',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: cardTitleTextColor,
                     fontWeight: FontWeight.bold,
@@ -641,7 +671,7 @@ child: SizedBox(
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Import Error'),
-            content: const Text('This text is not recognized as a recognizable format (Google Sheets, CSV, or Markdown table).'),
+            content: const Text('This text is not recognized as a recognizable format (Google Sheets, CSV, or Markdown).'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -751,6 +781,43 @@ child: SizedBox(
       SnackBar(
         content: Text('${DataParser.getFormatDisplayName(selectedExportFormat)} data copied to clipboard!'),
         duration: const Duration(seconds: snackbarDurationSeconds),
+      ),
+    );
+  }
+
+  Widget _buildFooter() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      color: appBarBackgroundColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextButton(
+            onPressed: () async {
+              const url = 'https://github.com/your-repo/markdown-table-editor';
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+              }
+            },
+            child: const Text(
+              'GitHub',
+              style: TextStyle(color: appBarTextColor),
+            ),
+          ),
+          const SizedBox(width: 16),
+          TextButton(
+            onPressed: () async {
+              const url = 'https://flutter.dev';
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+              }
+            },
+            child: const Text(
+              'Written in Flutter',
+              style: TextStyle(color: appBarTextColor),
+            ),
+          ),
+        ],
       ),
     );
   }

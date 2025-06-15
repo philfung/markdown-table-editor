@@ -55,7 +55,7 @@ class DataParser {
       case DataFormat.csv:
         return 'CSV';
       case DataFormat.markdown:
-        return 'Markdown table';
+        return 'Markdown';
     }
   }
   
