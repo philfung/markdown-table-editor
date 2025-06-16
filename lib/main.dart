@@ -76,6 +76,138 @@ List<List<String>> tableData = [
   ['Row 2, Cell 1', 'Row 2, Cell 2', 'Row 2, Cell 3']
 ];
 
+enum OnboardingStage {
+  textHighlight,
+  tableHighlight,
+  completed,
+}
+
+class OnboardingOverlay extends StatefulWidget {
+  final OnboardingStage stage;
+  final GlobalKey tableKey;
+  final GlobalKey textFieldKey;
+  final VoidCallback onTap;
+
+  const OnboardingOverlay({
+    Key? key,
+    required this.stage,
+    required this.tableKey,
+    required this.textFieldKey,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  _OnboardingOverlayState createState() => _OnboardingOverlayState();
+}
+
+class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    )..repeat(reverse: true);
+    _pulseAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final GlobalKey targetKey = widget.stage == OnboardingStage.tableHighlight
+        ? widget.tableKey
+        : widget.textFieldKey;
+    final String message = widget.stage == OnboardingStage.tableHighlight
+        ? '2. Edit table by clicking on each cell'
+        : '1. Copy / Paste Markdown text';
+
+    if (targetKey.currentContext == null || targetKey.currentContext!.findRenderObject() == null) {
+      return const SizedBox.shrink();
+    }
+
+    final RenderBox targetBox = targetKey.currentContext!.findRenderObject() as RenderBox;
+    if (!targetBox.hasSize) {
+      // Delay rendering until the target has a size
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {});
+        }
+      });
+      return const SizedBox.shrink();
+    }
+
+    final Offset targetOffset = targetBox.localToGlobal(Offset.zero);
+    final Size targetSize = targetBox.size;
+    // print("HERE4 - Target Offset: dx=${targetOffset.dx}, dy=${targetOffset.dy}, Size: width=${targetSize.width}, height=${targetSize.height}");
+
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.7),
+            ),
+          ),
+          Positioned(
+            left: targetOffset.dx,
+            top: targetOffset.dy - 60, // TODO: magic number
+            width: targetSize.width,
+            height: targetSize.height,
+            child: AnimatedBuilder(
+              animation: _pulseAnimation,
+              builder: (context, child) {
+                double expansion = 10 * _pulseAnimation.value;
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.blue.withOpacity(1 - _pulseAnimation.value),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(8 + expansion),
+                  ),
+                  padding: EdgeInsets.all(expansion),
+
+                );
+              },
+            ),
+          ),
+          Positioned(
+            left: targetOffset.dx,
+            top: targetOffset.dy - 120, // Position above the highlighted element
+            width: targetSize.width,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              // decoration: BoxDecoration(
+              //   color: Colors.blue.shade700,
+              //   borderRadius: BorderRadius.circular(8),
+              // ),
+              child: Text(
+                message,
+                style: TextStyle(
+                  // color: Colors.white,
+                  color:  Colors.blue.shade700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 void main() {
   runApp(const TableEditorApp());
 }
@@ -154,7 +286,10 @@ class TableEditorPage extends StatefulWidget {
 }
 
 class _TableEditorPageState extends State<TableEditorPage> {
-
+  final GlobalKey _tableKey = GlobalKey();
+  final GlobalKey _textFieldKey = GlobalKey();
+  OnboardingStage _onboardingStage = OnboardingStage.textHighlight;
+  
   final TextEditingController importController = TextEditingController();
   final TextEditingController exportController = TextEditingController();
   DataFormat selectedExportFormat = DataFormat.markdown;
@@ -173,6 +308,17 @@ class _TableEditorPageState extends State<TableEditorPage> {
     super.initState();
     _initializeCellControllers();
     updateExportOutput();
+    // Ensure onboarding is shown on first launch, delayed until after full layout
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Additional delay to ensure full rendering
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          setState(() {
+            _onboardingStage = OnboardingStage.textHighlight;
+          });
+        }
+      });
+    });
   }
 
   @override
@@ -256,59 +402,89 @@ class _TableEditorPageState extends State<TableEditorPage> {
           ),
         ),
       ),
-      body: GestureDetector(
-        onTap: () {
-          setState(() {
-            isPreviewMode = true;
-          });
-        },
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
+      body: Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isPreviewMode = true;
+              });
+            },
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(width: 25),
-                  Flexible(
-                    child: Text(
-                      'Edit your Markdown tables with ease. All data stays private in your browser.',
-                      style: GoogleFonts.roboto(
-                        fontSize: introFontSize,
-                        color: introFontColor,
-                        fontWeight: FontWeight.w300
+                  Row(
+                    children: [
+                      const SizedBox(width: 25),
+                      Flexible(
+                        child: Text(
+                          'Edit your Markdown tables with ease. All data stays private in your browser.',
+                          style: GoogleFonts.roboto(
+                            fontSize: introFontSize,
+                            color: introFontColor,
+                            fontWeight: FontWeight.w300
+                          ),
+                          textAlign: TextAlign.left,
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                        ),
                       ),
-                      textAlign: TextAlign.left,
-                      softWrap: true,
-                      overflow: TextOverflow.visible,
-                    ),
+                    ],
                   ),
+                  const SizedBox(height: 16),
+                  _buildTextCard(),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: 
+                    [const SizedBox(width: 100),
+                      SvgPicture.asset(
+                      'images/sync.svg',
+                      width: syncIconSize,
+                      height: syncIconSize,
+                      colorFilter: ColorFilter.mode(
+                        buttonHighlightedBackgroundColor,
+                        BlendMode.srcIn,
+                      ),
+                    )
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  _buildTableCard(),
+                  const SizedBox(height: 20),
+                  _buildFooter(),
                 ],
               ),
-              const SizedBox(height: 16),
-              _buildTableCard(),
-              const SizedBox(height: 10),
-              Row(
-                children: 
-                [const SizedBox(width: 100),
-                  SvgPicture.asset(
-                  'images/sync.svg',
-                  width: syncIconSize,
-                  height: syncIconSize,
-                  colorFilter: ColorFilter.mode(
-                    buttonHighlightedBackgroundColor,
-                    BlendMode.srcIn,
-                  ),
-                )
-                ],
-              ),
-              const SizedBox(height: 10),
-              _buildTextCard(),
-              const SizedBox(height: 20),
-              _buildFooter(),
-            ],
+            ),
           ),
-        ),
+          if (_onboardingStage != OnboardingStage.completed)
+            OnboardingOverlay(
+              stage: _onboardingStage,
+              tableKey: _tableKey,
+              textFieldKey: _textFieldKey,
+              onTap: () {
+                setState(() {
+                  if (_onboardingStage == OnboardingStage.textHighlight) {
+                    _onboardingStage = OnboardingStage.tableHighlight;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (_tableKey.currentContext != null) {
+                        final RenderBox tableBox = _tableKey.currentContext!.findRenderObject() as RenderBox;
+                        final Offset tableOffset = tableBox.localToGlobal(Offset.zero);
+                        _verticalScrollController.animateTo(
+                          tableOffset.dy - 100, // Adjust for some padding
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    });
+                  } else {
+                    _onboardingStage = OnboardingStage.completed;
+                  }
+                });
+              },
+            ),
+        ],
       ),
     );
   }
@@ -327,11 +503,11 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 const SizedBox(width: 12),
                 Text(
                   'Edit',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: cardTitleTextColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: cardTitleFontSize
-                ),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: cardTitleTextColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: cardTitleFontSize
+                  ),
                 ),
               ],
             ),
@@ -396,6 +572,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
             ),
             const SizedBox(height: textAreaSpacing),
             TextField(
+              key: _textFieldKey,
               controller: exportController,
               maxLines: textAreaHeight,
               decoration: const InputDecoration(
@@ -424,7 +601,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
             ElevatedButton.icon(
               onPressed: _copyToClipboard,
               icon: const Icon(Icons.copy),
-              label: const Text('Copy to Clipboard'),
+              label: const Text('Export to Clipboard'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: buttonBackgroundColor,
                 foregroundColor: tableTextColor,
@@ -447,6 +624,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
     }
 
     return SizedBox(
+      key: _tableKey,
       height: tableHeight, // Set a reasonable maximum height for the table
     
       child: ClipRect(
@@ -476,32 +654,32 @@ class _TableEditorPageState extends State<TableEditorPage> {
                         });
                       });
                     },
-child: SizedBox(
-  width: tableCellWidth,
-  height: tableCellHeight,
-  child: isPreviewMode
-      ? MarkdownBody(
-          data: tableData[0][index],
-          styleSheet: MarkdownStyleSheet(
-            p: TextStyle(fontSize: tableCellFontSize),
-          ),
-        )
-      : TextField(
-          controller: cellControllers[0][index],
-          focusNode: cellFocusNodes[0][index],
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            isDense: true,
-            contentPadding: EdgeInsets.all(tableCellPadding),
-          ),
-          style: TextStyle(
-            fontSize: tableCellFontSize,
-            overflow: TextOverflow.ellipsis,
-            color: cellControllers[0][index].text.contains('**') ? tableHeaderTextColor : tableTextColor,
-            fontWeight: cellControllers[0][index].text.contains('**') ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-),
+                    child: SizedBox(
+                      width: tableCellWidth,
+                      height: tableCellHeight,
+                      child: isPreviewMode
+                          ? MarkdownBody(
+                              data: tableData[0][index],
+                              styleSheet: MarkdownStyleSheet(
+                                p: TextStyle(fontSize: tableCellFontSize),
+                              ),
+                            )
+                          : TextField(
+                              controller: cellControllers[0][index],
+                              focusNode: cellFocusNodes[0][index],
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                isDense: true,
+                                contentPadding: EdgeInsets.all(tableCellPadding),
+                              ),
+                              style: TextStyle(
+                                fontSize: tableCellFontSize,
+                                overflow: TextOverflow.ellipsis,
+                                color: cellControllers[0][index].text.contains('**') ? tableHeaderTextColor : tableTextColor,
+                                fontWeight: cellControllers[0][index].text.contains('**') ? FontWeight.bold : FontWeight.normal,
+                              ),
+                            ),
+                    ),
                   ),
                 ),
               ),
@@ -571,7 +749,6 @@ child: SizedBox(
       ),
     );
   }
-
 
   Widget _buildTableControls() {
     return Column(
