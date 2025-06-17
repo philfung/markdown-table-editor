@@ -88,6 +88,7 @@ class OnboardingOverlay extends StatefulWidget {
   final OnboardingStage stage;
   final GlobalKey tableKey;
   final GlobalKey textFieldKey;
+  final GlobalKey exportButtonKey;
   final VoidCallback onTap;
 
   const OnboardingOverlay({
@@ -95,6 +96,7 @@ class OnboardingOverlay extends StatefulWidget {
     required this.stage,
     required this.tableKey,
     required this.textFieldKey,
+    required this.exportButtonKey,
     required this.onTap,
   });
 
@@ -110,7 +112,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     )..repeat(reverse: true);
     _pulseAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(_controller);
@@ -161,7 +163,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
         : widget.textFieldKey;
     final String message = widget.stage == OnboardingStage.tableHighlight
         ? 'Step 2. Click a cell to start editing.'
-        : "Step 1. Paste your table's Markdown here (if any).";
+        : "Step 1. Paste table's Markdown code here (if any).";
 
     if (targetKey.currentContext == null || targetKey.currentContext!.findRenderObject() == null) {
       return const SizedBox.shrink();
@@ -321,6 +323,7 @@ class TableEditorPage extends StatefulWidget {
 class _TableEditorPageState extends State<TableEditorPage> {
   final GlobalKey _tableKey = GlobalKey();
   final GlobalKey _textFieldKey = GlobalKey();
+  final GlobalKey _exportButtonKey = GlobalKey();
   OnboardingStage _onboardingStage = OnboardingStage.welcome;
   
   final TextEditingController importController = TextEditingController();
@@ -408,9 +411,11 @@ class _TableEditorPageState extends State<TableEditorPage> {
         surfaceTintColor: appBarSurfaceTintColor,
         title: Align(
           alignment: Alignment.centerLeft,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+          child: GestureDetector(
+            onTap: _reloadApp,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 SvgPicture.asset(
                   'images/table_icon.svg',
                   width: syncIconSize,
@@ -420,9 +425,10 @@ class _TableEditorPageState extends State<TableEditorPage> {
                     BlendMode.srcIn,
                   ),
                 ),
-              const SizedBox(width: 8),
-              const Text(appTitle, style: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold, fontSize: appTitleFontSize)),
-            ],
+                const SizedBox(width: 8),
+                const Text(appTitle, style: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold, fontSize: appTitleFontSize)),
+              ],
+            ),
           ),
         ),
       ),
@@ -469,28 +475,31 @@ class _TableEditorPageState extends State<TableEditorPage> {
               stage: _onboardingStage,
               tableKey: _tableKey,
               textFieldKey: _textFieldKey,
+              exportButtonKey: _exportButtonKey,
               onTap: () {
-                setState(() {
-                  if (_onboardingStage == OnboardingStage.welcome) {
-                    _onboardingStage = OnboardingStage.textHighlight;
-                  } else if (_onboardingStage == OnboardingStage.textHighlight) {
-                    _onboardingStage = OnboardingStage.tableHighlight;
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (_tableKey.currentContext != null) {
-                        final RenderBox tableBox = _tableKey.currentContext!.findRenderObject() as RenderBox;
-                        final Offset tableOffset = tableBox.localToGlobal(Offset.zero);
-                        _verticalScrollController.animateTo(
-                          tableOffset.dy - 100, // Adjust for some padding
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
-                      }
-                    });
-                  } else {
-                    _onboardingStage = OnboardingStage.completed;
-                  }
-                });
-              },
+              setState(() {
+                if (_onboardingStage == OnboardingStage.welcome) {
+                  _onboardingStage = OnboardingStage.textHighlight;
+                } else if (_onboardingStage == OnboardingStage.textHighlight) {
+                  _onboardingStage = OnboardingStage.tableHighlight;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (_tableKey.currentContext != null) {
+                      final RenderBox tableBox = _tableKey.currentContext!.findRenderObject() as RenderBox;
+                      final Offset tableOffset = tableBox.localToGlobal(Offset.zero);
+                      _verticalScrollController.animateTo(
+                        tableOffset.dy - 100, // Adjust for some padding
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  });
+                } else if (_onboardingStage == OnboardingStage.tableHighlight) {
+                  _onboardingStage = OnboardingStage.completed;
+                } else {
+                  _onboardingStage = OnboardingStage.completed;
+                }
+              });
+            },
             ),
         ],
       ),
@@ -607,6 +616,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
             ),
             const SizedBox(height: textAreaSpacing),
             ElevatedButton.icon(
+              key: _exportButtonKey,
               onPressed: _copyToClipboard,
               icon: const Icon(Icons.copy),
               label: const Text('Export to Clipboard', style: TextStyle(fontSize: actionChipFontSize),),
@@ -829,22 +839,25 @@ class _TableEditorPageState extends State<TableEditorPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            backgroundColor: backgroundColor ,
             title: const Text('Import Data'),
-            content: Text('Detected $formatName data. Do you want to import this data into the table?'),
+            content: Text('Detected $formatName data. Do you want to import this data into the table?',
+            style: TextStyle(color:buttonTextColor),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   updateExportOutput();
                 },
-                child: const Text('No'),
+                child: const Text('No', style: TextStyle(color:buttonTextColor)),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   _importTableData(data, detectedFormat);
                 },
-                child: const Text('Yes'),
+                child: const Text('Yes', style: TextStyle(color:buttonTextColor)),
               ),
             ],
           );
@@ -958,6 +971,26 @@ class _TableEditorPageState extends State<TableEditorPage> {
       _initializeCellControllers();
       updateExportOutput();
     });
+  }
+
+  void _reloadApp() {
+    setState(() {
+      tableData = defaultTableData.map((row) => List<String>.from(row)).toList();
+      _initializeCellControllers();
+      updateExportOutput();
+      _onboardingStage = OnboardingStage.welcome;
+      importController.clear();
+      exportController.text = DataParser.generateMarkdown(tableData);
+      isPreviewMode = true;
+      selectedRowIndex = null;
+      selectedColIndex = null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('App reloaded'),
+        duration: Duration(seconds: snackbarDurationSeconds),
+      ),
+    );
   }
 
   void _copyToClipboard() {
