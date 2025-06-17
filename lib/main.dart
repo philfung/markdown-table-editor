@@ -9,66 +9,64 @@ import 'data_parser.dart';
 // Strings
 const String appTitle = 'Markdown Table Editor';
 
-// Color constants
-const Color appBarBackgroundColor = Color(0xFF171717);
-const Color appBarSurfaceTintColor = Colors.blue;
-const Color appBarIconColor = Color(0xFFFAFAFA);
-const Color appBarTextColor = Color(0xFFFAFAFA);
-const Color backgroundColor = Color(0xFF0A0A0A);
-const Color buttonBackgroundColor = Color(0xFF212121);
-const Color buttonBorderColor = Color(0xFF3A3A3A);
-const Color buttonHighlightedBackgroundColor = Color(0xFFE5E5E5);
-const Color buttonHighlightedBorderColor = Color(0xFF717171);
-const Color buttonTextColor = Color(0xFFF0F0F0);
-const Color cardBackgroundColor = Color(0xFF171717);
-const Color cardBorderColor = Color(0xFF2E2E2E);
-const Color cardTitleTextColor = Color(0xFFF6F6F6);
-const Color dividerColor = Color(0xFF2E2E2E);
-const Color dropdownBackgroundColor = Color(0xFF212121);
-const Color dropdownBorderColor = Color(0xFF434343);
-const Color dropdownTextColor = Color(0xFFFAFAFA);
-const Color headerBackgroundColor = Color(0xFF1F1F1F);
-const Color headerTextColor = Color(0xFFFAFAFA);
-const Color placeholderTextColor = Color(0xFFA1A1A1);
-// Add new colors for DataTable row border and heading background
-const Color tableBorderColor = Color(0xFF2E2E2E);
-const Color tableDataRowColor = Color(0xFF2E2E2E);
-const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F);
-const Color tableHeadingBackgroundColor = Color(0xFF1F1F1F);
-const Color tableHeaderTextColor = Color(0xFFFAFAFA);
-const Color tableNormalCellBackgroundColor = Color(0xFF171717);
-const Color tableTextColor = Color(0xFFF9F9F9);
-const Color textAreaBackgroundColor = Color(0xFF212121);
-const Color textAreaBorderBackgroundColor = Color(0xFF212121);
-const Color textAreaTextColor = Color(0xFFA1A1A1);
-const Color switchTextColor = Color(0xFFFAFAFA);
+const Color appBarBackgroundColor = Color(0xFF171717); // dark background
+const Color appBarIconColor = Color(0xFFFAFAFA); // white
+const Color appBarSurfaceTintColor = Colors.blue; // default blue
+const Color appBarTextColor = Color(0xFFFAFAFA); // white
+const Color backgroundColor = Color(0xFF0A0A0A); // dark dark
+const Color buttonBackgroundColor = Color(0xFF212121); // dark gray
+const Color buttonBorderColor = Color(0xFF3A3A3A); // light gray
+const Color buttonHighlightedBackgroundColor = Color(0xFFE5E5E5); // very light gray
+const Color buttonHighlightedBorderColor = Color(0xFF717171); // light gray
+const Color buttonTextColor = Color(0xFFF0F0F0); // light gray
+const Color cardBackgroundColor = Color(0xFF171717); // dark background
+const Color cardBorderColor = Color(0xFF2E2E2E); // light gray
+const Color cardTitleTextColor = Color(0xFFF6F6F6); // white
+const Color dividerColor = Color(0xFF2E2E2E); // light gray
+const Color dropdownBackgroundColor = Color(0xFF212121); // dark gray
+const Color dropdownBorderColor = Color(0xFF434343); // dark gray
+const Color dropdownTextColor = Color(0xFFFAFAFA); // white
+const Color headerBackgroundColor = Color(0xFF1F1F1F); // dark gray
+const Color headerTextColor = Color(0xFFFAFAFA); // white
+Color onboardingFontColor = Colors.blue.shade700; // light gray
+const Color placeholderTextColor = Color(0xFFA1A1A1); // light gray
+const Color switchTextColor = Color(0xFFFAFAFA); // white
+const Color tableBorderColor = Color(0xFF2E2E2E); // light gray
+const Color tableDataRowColor = Color(0xFF2E2E2E); // light gray
+const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F); // dark gray
+const Color tableHeaderTextColor = Color(0xFFFAFAFA); // white
+const Color tableHeadingBackgroundColor = Color(0xFF1F1F1F); // dark gray
+const Color tableNormalCellBackgroundColor = Color(0xFF171717); // dark background
+const Color tableTextColor = Color(0xFFF9F9F9); // light gray
+const Color textFieldBackgroundColor = Color(0xFF212121); // dark gray
+const Color textFieldBorderBackgroundColor = Color(0xFF212121); // dark gray
+const Color textFieldTextColor = Color(0xFFA1A1A1); // light gray
 
-// Constants for dimensions
 const double actionChipFontSize = 12.0;
 const double appTitleFontSize = 24.0;
 const double buttonBorderRadius = 4.0;
 const double cardPadding = 20.0;
 const double cardTitleFontSize = 18.0;
 const double cardTitleIconSize = 20.0;
+const double onboardingFontSize = 25.0;
+const double onboardingOpacity = 0.8;
 const int initialHeaders = 3;
 const int snackbarDurationSeconds = 2;
 const double switchFontSize = 12.0;
 const double syncIconSize = 40.0;
 const double tableBorderRadius = 0.0;
 const double tableCellFontSize = 12.0;
-const double tableCellPadding = 0.0;
 const double tableCellHeight = 20.0;
+const double tableCellPadding = 0.0;
 const double tableCellWidth = 100.0;
-const double tableDataRowMinHeight = 10.0;  
 const double tableDataRowMaxHeight = 40.0;
+const double tableDataRowMinHeight = 10.0;
 const double tableHeadingRowHeight = 30.0;
 const double tableHeight = 120.0;
 const double tableIconSize = 35.0;
 const double textAreaFontSize = 12.0;
 const int textAreaHeight = 3;
 const double textAreaSpacing = 10.0;
-const double introFontSize = 20.0;
-const Color introFontColor = Color.fromARGB(255, 116, 114, 114);
 
 List<List<String>> tableData = [
   ['**Header 1**', '**Header 2**', '**Header 3**'],
@@ -77,6 +75,7 @@ List<List<String>> tableData = [
 ];
 
 enum OnboardingStage {
+  welcome,
   textHighlight,
   tableHighlight,
   completed,
@@ -89,12 +88,12 @@ class OnboardingOverlay extends StatefulWidget {
   final VoidCallback onTap;
 
   const OnboardingOverlay({
-    Key? key,
+    super.key,
     required this.stage,
     required this.tableKey,
     required this.textFieldKey,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   _OnboardingOverlayState createState() => _OnboardingOverlayState();
@@ -122,12 +121,44 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    if (widget.stage == OnboardingStage.welcome) {
+      return GestureDetector(
+        onTap: widget.onTap,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(onboardingOpacity),
+              ),
+            ),
+            Positioned(
+              top: 50,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  'Welcome!  Easily edit your Markdown tables.',
+                  style: TextStyle(
+                    color: onboardingFontColor,
+                    fontSize: onboardingFontSize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final GlobalKey targetKey = widget.stage == OnboardingStage.tableHighlight
         ? widget.tableKey
         : widget.textFieldKey;
     final String message = widget.stage == OnboardingStage.tableHighlight
-        ? '2. Edit table by clicking on each cell'
-        : '1. Copy / Paste Markdown text';
+        ? 'Step 2. Click a cell to start editing.'
+        : "Step 1. Paste your table's Markdown (if any).";
 
     if (targetKey.currentContext == null || targetKey.currentContext!.findRenderObject() == null) {
       return const SizedBox.shrink();
@@ -154,7 +185,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
         children: [
           Positioned.fill(
             child: Container(
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withOpacity(onboardingOpacity),
             ),
           ),
           Positioned(
@@ -175,7 +206,6 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
                     borderRadius: BorderRadius.circular(8 + expansion),
                   ),
                   padding: EdgeInsets.all(expansion),
-
                 );
               },
             ),
@@ -194,8 +224,8 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
                 message,
                 style: TextStyle(
                   // color: Colors.white,
-                  color:  Colors.blue.shade700,
-                  fontSize: 16,
+                  color: onboardingFontColor,
+                  fontSize: onboardingFontSize,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
@@ -249,8 +279,8 @@ class TableEditorApp extends StatelessWidget {
           ),
         ),
         inputDecorationTheme: const InputDecorationTheme(
-          fillColor: textAreaBackgroundColor,
-          border: OutlineInputBorder(borderSide: BorderSide(color: textAreaBorderBackgroundColor)),
+          fillColor: textFieldBackgroundColor,
+          border: OutlineInputBorder(borderSide: BorderSide(color: textFieldBorderBackgroundColor)),
           hintStyle: TextStyle(color: placeholderTextColor),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -265,8 +295,8 @@ class TableEditorApp extends StatelessWidget {
         ),
 // Update DataTable theme to use tableDataRowColor for row borders
         dataTableTheme: DataTableThemeData(
-          headingRowColor: MaterialStateProperty.all(tableHeaderCellBackgroundColor),
-          dataRowColor: MaterialStateProperty.all(tableNormalCellBackgroundColor),
+          headingRowColor: WidgetStateProperty.all(tableHeaderCellBackgroundColor),
+          dataRowColor: WidgetStateProperty.all(tableNormalCellBackgroundColor),
           headingTextStyle: TextStyle(color: tableHeaderTextColor),
           dataTextStyle: TextStyle(color: tableTextColor),
           dividerThickness: 1.0,
@@ -288,7 +318,7 @@ class TableEditorPage extends StatefulWidget {
 class _TableEditorPageState extends State<TableEditorPage> {
   final GlobalKey _tableKey = GlobalKey();
   final GlobalKey _textFieldKey = GlobalKey();
-  OnboardingStage _onboardingStage = OnboardingStage.textHighlight;
+  OnboardingStage _onboardingStage = OnboardingStage.welcome;
   
   final TextEditingController importController = TextEditingController();
   final TextEditingController exportController = TextEditingController();
@@ -308,17 +338,8 @@ class _TableEditorPageState extends State<TableEditorPage> {
     super.initState();
     _initializeCellControllers();
     updateExportOutput();
-    // Ensure onboarding is shown on first launch, delayed until after full layout
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Additional delay to ensure full rendering
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) {
-          setState(() {
-            _onboardingStage = OnboardingStage.textHighlight;
-          });
-        }
-      });
-    });
+    // Removed automatic transition to textHighlight to ensure welcome stage persists until user interaction
+    // WidgetsBinding.instance.addPostFrameCallback and Future.delayed were setting the stage to textHighlight after 500ms
   }
 
   @override
@@ -415,24 +436,6 @@ class _TableEditorPageState extends State<TableEditorPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    children: [
-                      const SizedBox(width: 25),
-                      Flexible(
-                        child: Text(
-                          'Edit your Markdown tables with ease. All data stays private in your browser.',
-                          style: GoogleFonts.roboto(
-                            fontSize: introFontSize,
-                            color: introFontColor,
-                            fontWeight: FontWeight.w300
-                          ),
-                          textAlign: TextAlign.left,
-                          softWrap: true,
-                          overflow: TextOverflow.visible,
-                        ),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 16),
                   _buildTextCard(),
                   const SizedBox(height: 10),
@@ -465,7 +468,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
               textFieldKey: _textFieldKey,
               onTap: () {
                 setState(() {
-                  if (_onboardingStage == OnboardingStage.textHighlight) {
+                  if (_onboardingStage == OnboardingStage.welcome) {
+                    _onboardingStage = OnboardingStage.textHighlight;
+                  } else if (_onboardingStage == OnboardingStage.textHighlight) {
                     _onboardingStage = OnboardingStage.tableHighlight;
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (_tableKey.currentContext != null) {
@@ -577,12 +582,12 @@ class _TableEditorPageState extends State<TableEditorPage> {
               maxLines: textAreaHeight,
               decoration: const InputDecoration(
                 hintText: 'Paste data here to import or edit text directly. Supports Markdown, CSV, and Google Sheets formats.',
-                hintStyle: TextStyle(color: textAreaTextColor),
+                hintStyle: TextStyle(color: textFieldTextColor),
                 border: OutlineInputBorder(),
                 filled: true,
-                fillColor: textAreaBackgroundColor,
+                fillColor: textFieldBackgroundColor,
               ),
-              style: const TextStyle(fontFamily: 'monospace', fontSize: textAreaFontSize, color: textAreaTextColor),
+              style: const TextStyle(fontFamily: 'monospace', fontSize: textAreaFontSize, color: textFieldTextColor),
               onChanged: (value) {
                 if (value.trim().isNotEmpty) {
                   _handlePastedData(value.trim());
@@ -601,11 +606,11 @@ class _TableEditorPageState extends State<TableEditorPage> {
             ElevatedButton.icon(
               onPressed: _copyToClipboard,
               icon: const Icon(Icons.copy),
-              label: const Text('Export to Clipboard'),
+              label: const Text('Export to Clipboard', style: TextStyle(fontSize: actionChipFontSize),),
               style: ElevatedButton.styleFrom(
                 backgroundColor: buttonBackgroundColor,
                 foregroundColor: tableTextColor,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(buttonBorderRadius),
                   side: BorderSide(color: buttonBorderColor),
@@ -637,7 +642,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
               headingRowHeight: tableHeadingRowHeight,
               dataRowMinHeight: tableDataRowMinHeight,
               dataRowMaxHeight: tableDataRowMaxHeight,
-              headingRowColor: MaterialStateProperty.all(tableHeadingBackgroundColor),
+              headingRowColor: WidgetStateProperty.all(tableHeadingBackgroundColor),
               border: TableBorder.all(color: tableBorderColor, borderRadius: BorderRadius.circular(tableBorderRadius)),
               columns: List.generate(
                 tableData[0].length,
