@@ -31,6 +31,7 @@ const Color headerTextColor = Color(0xFFFAFAFA); // white
 Color onboardingFontColor = Colors.blue.shade700; // light gray
 const Color placeholderTextColor = Color(0xFFA1A1A1); // light gray
 const Color switchTextColor = Color(0xFFFAFAFA); // white
+const Color syncIconColor = Color(0xFFA1A1A1); 
 const Color tableBorderColor = Color(0xFF2E2E2E); // light gray
 const Color tableDataRowColor = Color(0xFF2E2E2E); // light gray
 const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F); // dark gray
@@ -68,11 +69,13 @@ const double textAreaFontSize = 12.0;
 const int textAreaHeight = 3;
 const double textAreaSpacing = 10.0;
 
-List<List<String>> tableData = [
+List<List<String>> defaultTableData = [
   ['**Header 1**', '**Header 2**', '**Header 3**'],
   ['Row 1, Cell 1', 'Row 1, Cell 2', 'Row 1, Cell 3'],
   ['Row 2, Cell 1', 'Row 2, Cell 2', 'Row 2, Cell 3']
 ];
+
+List<List<String>> tableData = defaultTableData.map((row) => List<String>.from(row)).toList();
 
 enum OnboardingStage {
   welcome,
@@ -158,7 +161,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
         : widget.textFieldKey;
     final String message = widget.stage == OnboardingStage.tableHighlight
         ? 'Step 2. Click a cell to start editing.'
-        : "Step 1. Paste your table's Markdown (if any).";
+        : "Step 1. Paste your table's Markdown here (if any).";
 
     if (targetKey.currentContext == null || targetKey.currentContext!.findRenderObject() == null) {
       return const SizedBox.shrink();
@@ -413,7 +416,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                   width: syncIconSize,
                   height: syncIconSize,
                   colorFilter: ColorFilter.mode(
-                    appBarIconColor,
+                    syncIconColor,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -436,7 +439,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 5),
                   _buildTextCard(),
                   const SizedBox(height: 10),
                   Row(
@@ -447,7 +450,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                       width: syncIconSize,
                       height: syncIconSize,
                       colorFilter: ColorFilter.mode(
-                        buttonHighlightedBackgroundColor,
+                        const Color.fromARGB(255, 64, 62, 62),
                         BlendMode.srcIn,
                       ),
                     )
@@ -770,7 +773,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
             TableEditorActionChip(label: 'Add Col', onPressed: _addColumn),
             TableEditorActionChip(label: 'Delete Row', onPressed: _deleteRow),
             TableEditorActionChip(label: 'Delete Col', onPressed: _deleteColumn),
-            TableEditorActionChip(label: 'Clear Table', onPressed: _clearTable),
+            TableEditorActionChip(label: 'Reset', onPressed: _resetTable),
             Row(
               children: [
                 Text(
@@ -949,9 +952,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
     });
   }
 
-  void _clearTable() {
+  void _resetTable() {
     setState(() {
-      tableData = List.generate(1, (_) => List.generate(initialHeaders, (index) => index == 0 ? '**Header ${index + 1}**' : 'Header ${index + 1}'));
+      tableData = [List<String>.from(defaultTableData[0])];
       _initializeCellControllers();
       updateExportOutput();
     });
