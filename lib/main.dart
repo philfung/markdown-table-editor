@@ -10,9 +10,10 @@ import 'data_parser.dart';
 const double actionChipFontSize = 12.0;
 const Color appBarBackgroundColor = Color(0xFF171717); // dark background
 const Color appBarIconColor = Color(0xFFFAFAFA); // white
+const double appBarIconSize = 32.0;
 const Color appBarSurfaceTintColor = Colors.blue; // default blue
 const Color appBarTextColor = Color(0xFFFAFAFA); // white
-const double appTitleFontSize = 24.0;
+const double appTitleFontSize = 22.0;
 const Color backgroundColor = Color(0xFF0A0A0A); // dark dark
 const Color buttonBackgroundColor = Color(0xFF212121); // dark gray
 const Color buttonBorderColor = Color(0xFF3A3A3A); // light gray
@@ -34,7 +35,7 @@ const Color dropdownLabelTextColor = Color(0xFFFAFAFA);
 const Color headerBackgroundColor = Color(0xFF1F1F1F); // dark gray
 const Color headerTextColor = Color(0xFFFAFAFA); // white
 Color onboardingFontColor = Colors.blue.shade700; // light gray
-const double onboardingFontSize = 25.0;
+const double onboardingFontSize = 20.0;
 const double onboardingOpacity = 0.8;
 const Color placeholderTextColor = Color(0xFFA1A1A1); // light gray
 const int snackbarDurationSeconds = 2;
@@ -243,7 +244,6 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
                 child: Text(
                   message,
                   style: TextStyle(
-                    // color: Colors.white,
                     color: onboardingFontColor,
                     fontSize: onboardingFontSize,
                     fontWeight: FontWeight.bold,
@@ -309,7 +309,6 @@ class TableEditorApp extends StatelessWidget {
             ),
           ),
         ),
-// Update DataTable theme to use tableDataRowColor for row borders
         dataTableTheme: DataTableThemeData(
           headingRowColor: WidgetStateProperty.all(tableHeaderCellBackgroundColor),
           dataRowColor: WidgetStateProperty.all(tableNormalCellBackgroundColor),
@@ -429,8 +428,8 @@ class _TableEditorPageState extends State<TableEditorPage> {
               children: [
                 SvgPicture.asset(
                   'images/table_icon.svg',
-                  width: syncIconSize,
-                  height: syncIconSize,
+                  width: appBarIconSize,
+                  height: appBarIconSize,
                   colorFilter: ColorFilter.mode(
                     syncIconColor,
                     BlendMode.srcIn,
@@ -687,9 +686,10 @@ class _TableEditorPageState extends State<TableEditorPage> {
                       child: isPreviewMode
                           ? MarkdownBody(
                               data: tableData[0][index],
-                              styleSheet: MarkdownStyleSheet(
-                                p: TextStyle(fontSize: tableCellFontSize),
-                              ),
+                              // styleSheet: MarkdownStyleSheet(
+                              //   a: TextStyle(color: Colors.amber, fontSize:  tableCellFontSize, overflow: TextOverflow.ellipsis),
+                              //   p: TextStyle(color: Colors.green, fontSize:  tableCellFontSize, overflow: TextOverflow.ellipsis),
+                              // ),
                             )
                           : TextField(
                               controller: cellControllers[0][index],
