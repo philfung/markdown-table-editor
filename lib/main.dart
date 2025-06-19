@@ -3,79 +3,80 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'data_parser.dart';
 
-// Strings
-const String appTitle = 'Markdown Table Editor';
 
+// styling
+const double actionChipFontSize = 12.0;
 const Color appBarBackgroundColor = Color(0xFF171717); // dark background
 const Color appBarIconColor = Color(0xFFFAFAFA); // white
 const Color appBarSurfaceTintColor = Colors.blue; // default blue
 const Color appBarTextColor = Color(0xFFFAFAFA); // white
+const double appTitleFontSize = 24.0;
 const Color backgroundColor = Color(0xFF0A0A0A); // dark dark
 const Color buttonBackgroundColor = Color(0xFF212121); // dark gray
 const Color buttonBorderColor = Color(0xFF3A3A3A); // light gray
+const double buttonBorderRadius = 4.0;
 const Color buttonHighlightedBackgroundColor = Color(0xFFE5E5E5); // very light gray
 const Color buttonHighlightedBorderColor = Color(0xFF717171); // light gray
 const Color buttonTextColor = Color(0xFFF0F0F0); // light gray
 const Color cardBackgroundColor = Color(0xFF171717); // dark background
 const Color cardBorderColor = Color(0xFF2E2E2E); // light gray
+const double cardPadding = 20.0;
+const double cardTitleFontSize = 18.0;
+const double cardTitleIconSize = 20.0;
 const Color cardTitleTextColor = Color(0xFFF6F6F6); // white
 const Color dividerColor = Color(0xFF2E2E2E); // light gray
 const Color dropdownBackgroundColor = Color(0xFF212121); // dark gray
 const Color dropdownBorderColor = Color(0xFF434343); // dark gray
 const Color dropdownTextColor = Color(0xFFFAFAFA); // white
+const Color dropdownLabelTextColor = Color(0xFFFAFAFA);
 const Color headerBackgroundColor = Color(0xFF1F1F1F); // dark gray
 const Color headerTextColor = Color(0xFFFAFAFA); // white
 Color onboardingFontColor = Colors.blue.shade700; // light gray
-const Color placeholderTextColor = Color(0xFFA1A1A1); // light gray
-const Color switchTextColor = Color(0xFFFAFAFA); // white
-const Color syncIconColor = Color(0xFFA1A1A1); 
-const Color tableBorderColor = Color(0xFF2E2E2E); // light gray
-const Color tableDataRowColor = Color(0xFF2E2E2E); // light gray
-const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F); // dark gray
-const Color tableHeaderTextColor = Color(0xFFFAFAFA); // white
-const Color tableHeadingBackgroundColor = Color(0xFF1F1F1F); // dark gray
-const Color tableNormalCellBackgroundColor = Color(0xFF171717); // dark background
-const Color tableTextColor = Color(0xFFF9F9F9); // light gray
-const Color textFieldBackgroundColor = Color(0xFF212121); // dark gray
-const Color textFieldBorderBackgroundColor = Color(0xFF212121); // dark gray
-const Color textFieldTextColor = Color(0xFFA1A1A1); // light gray
-
-const double actionChipFontSize = 12.0;
-const double appTitleFontSize = 24.0;
-const double buttonBorderRadius = 4.0;
-const double cardPadding = 20.0;
-const double cardTitleFontSize = 18.0;
-const double cardTitleIconSize = 20.0;
 const double onboardingFontSize = 25.0;
 const double onboardingOpacity = 0.8;
-const int initialHeaders = 3;
+const Color placeholderTextColor = Color(0xFFA1A1A1); // light gray
 const int snackbarDurationSeconds = 2;
 const double switchFontSize = 12.0;
+const Color switchTextColor = Color(0xFFFAFAFA); // white
+const Color syncIconColor = Color(0xFFA1A1A1); 
 const double syncIconSize = 40.0;
+const Color tableBorderColor = Color(0xFF2E2E2E); // light gray
 const double tableBorderRadius = 0.0;
 const double tableCellFontSize = 12.0;
 const double tableCellHeight = 20.0;
 const double tableCellPadding = 0.0;
 const double tableCellWidth = 100.0;
+const Color tableDataRowColor = Color(0xFF2E2E2E); // light gray
 const double tableDataRowMaxHeight = 40.0;
 const double tableDataRowMinHeight = 10.0;
+const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F); // dark gray
+const Color tableHeaderTextColor = Color(0xFFFAFAFA); // white
+const Color tableHeadingBackgroundColor = Color(0xFF1F1F1F); // dark gray
 const double tableHeadingRowHeight = 30.0;
 const double tableHeight = 120.0;
 const double tableIconSize = 35.0;
-const double textAreaFontSize = 12.0;
-const int textAreaHeight = 3;
-const double textAreaSpacing = 10.0;
+const Color tableNormalCellBackgroundColor = Color(0xFF171717); // dark background
+const Color tableTextColor = Color(0xFFF9F9F9); // light gray
+const Color textFieldBackgroundColor = Color(0xFF212121); // dark gray
+const Color textFieldBorderBackgroundColor = Color(0xFF212121); // dark gray
+const String textFieldFontFamily = 'monospace';
+const double textFieldFontSize = 12.0;
+const int textFieldMaxLines = 3;
+const double textFieldSpacing = 10.0;
+const Color textFieldTextColor = Color(0xFFA1A1A1); // light gray
 
-List<List<String>> defaultTableData = [
+// strings
+const String appTitle = 'Markdown Table Editor';
+const String onboardingWelcomeMessage = 'Easily edit your Markdown tables.';
+List<List<String>> tableDefaultData = [
   ['**Header 1**', '**Header 2**', '**Header 3**'],
   ['Row 1, Cell 1', 'Row 1, Cell 2', 'Row 1, Cell 3'],
   ['Row 2, Cell 1', 'Row 2, Cell 2', 'Row 2, Cell 3']
 ];
 
-List<List<String>> tableData = defaultTableData.map((row) => List<String>.from(row)).toList();
+List<List<String>> tableData = tableDefaultData.map((row) => List<String>.from(row)).toList();
 
 enum OnboardingStage {
   welcome,
@@ -150,7 +151,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    'This tool lets you easily edit your Markdown tables.',
+                    onboardingWelcomeMessage,
                     style: TextStyle(
                       color: onboardingFontColor,
                       fontSize: onboardingFontSize,
@@ -190,7 +191,6 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
 
     final Offset targetOffset = targetBox.localToGlobal(Offset.zero);
     final Size targetSize = targetBox.size;
-    // print("HERE4 - Target Offset: dx=${targetOffset.dx}, dy=${targetOffset.dy}, Size: width=${targetSize.width}, height=${targetSize.height}");
 
     return RawKeyboardListener(
       focusNode: FocusNode(),
@@ -293,12 +293,7 @@ class TableEditorApp extends StatelessWidget {
         scaffoldBackgroundColor: backgroundColor,
         cardColor: cardBackgroundColor,
         dividerColor: dividerColor,
-        textTheme: GoogleFonts.poppinsTextTheme(
-          const TextTheme(
-            headlineSmall: TextStyle(color: cardTitleTextColor),
-            bodyMedium: TextStyle(color: tableTextColor),
-          ),
-        ),
+        textTheme: Typography().englishLike,
         inputDecorationTheme: const InputDecorationTheme(
           fillColor: textFieldBackgroundColor,
           border: OutlineInputBorder(borderSide: BorderSide(color: textFieldBorderBackgroundColor)),
@@ -536,11 +531,11 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 const SizedBox(width: 12),
                 Text(
                   'Edit',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  style: TextStyle(
                     color: cardTitleTextColor,
                     fontWeight: FontWeight.bold,
                     fontSize: cardTitleFontSize
-                  ),
+                    )
                 ),
               ],
             ),
@@ -568,18 +563,16 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 const SizedBox(width: 12),
                 Text(
                   'Import / Export',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: cardTitleTextColor,
+                  style: TextStyle(color: cardTitleTextColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: cardTitleFontSize
-                  ),
+                    fontSize: cardTitleFontSize)
                 ),
               ],
             ),
             const SizedBox(height: 5),
             Row(
               children: [
-                const Text('Format: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Format: ', style: TextStyle(color: dropdownLabelTextColor)),
                 const SizedBox(width: 10),
                 DropdownButton<DataFormat>(
                   value: selectedExportFormat,
@@ -603,11 +596,11 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 ),
               ],
             ),
-            const SizedBox(height: textAreaSpacing),
+            const SizedBox(height: textFieldSpacing),
             TextField(
               key: _textFieldKey,
               controller: exportController,
-              maxLines: textAreaHeight,
+              maxLines: textFieldMaxLines,
               decoration: const InputDecoration(
                 hintText: 'Paste data here to import or edit text directly. Supports Markdown, CSV, and Google Sheets formats.',
                 hintStyle: TextStyle(color: textFieldTextColor),
@@ -615,7 +608,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 filled: true,
                 fillColor: textFieldBackgroundColor,
               ),
-              style: const TextStyle(fontFamily: 'monospace', fontSize: textAreaFontSize, color: textFieldTextColor),
+              style: const TextStyle(fontFamily: textFieldFontFamily, fontSize: textFieldFontSize, color: textFieldTextColor),
               onChanged: (value) {
                 if (value.trim().isNotEmpty) {
                   _handlePastedData(value.trim());
@@ -630,7 +623,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 }
               },
             ),
-            const SizedBox(height: textAreaSpacing),
+            const SizedBox(height: textFieldSpacing),
             ElevatedButton.icon(
               key: _exportButtonKey,
               onPressed: _copyToClipboard,
@@ -983,7 +976,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
 
   void _resetTable() {
     setState(() {
-      tableData = [List<String>.from(defaultTableData[0])];
+      tableData = [List<String>.from(tableDefaultData[0])];
       _initializeCellControllers();
       updateExportOutput();
     });
@@ -991,7 +984,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
 
   void _reloadApp() {
     setState(() {
-      tableData = defaultTableData.map((row) => List<String>.from(row)).toList();
+      tableData = tableDefaultData.map((row) => List<String>.from(row)).toList();
       _initializeCellControllers();
       updateExportOutput();
       _onboardingStage = OnboardingStage.welcome;
