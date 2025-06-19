@@ -32,7 +32,7 @@ const double cardTitleFontSize = 18.0;
 const double cardTitleIconSize = 20.0;
 const Color cardTitleTextColor = Color(0xFFF6F6F6); // white
 const Color cardSubtitleTextColor = Color(0xFFA1A1A1); // light gray
-const double cardSubtitleFontSize = 14.0;
+const double cardSubtitleFontSize = 11.0;
 const double cardTitleSubtitleSpacing = 5.0;
 // Dividers
 const Color dividerColor = Color(0xFF2E2E2E); // light gray

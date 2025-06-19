@@ -30,13 +30,13 @@ class TableControls extends StatelessWidget {
         const SizedBox(height: 10),
         Wrap(
           alignment: WrapAlignment.start,
-          spacing: 10,
-          runSpacing: 10,
+          spacing: 5,
+          runSpacing: 5,
           children: [
-            _TableEditorActionChip(label: 'Add Row', onPressed: () => onAddRow()),
-            _TableEditorActionChip(label: 'Add Col', onPressed: () => onAddColumn()),
-            _TableEditorActionChip(label: 'Delete Row', onPressed: () => onDeleteRow()),
-            _TableEditorActionChip(label: 'Delete Col', onPressed: () => onDeleteColumn()),
+            _TableEditorActionChip(label: '+ Row', onPressed: () => onAddRow()),
+            _TableEditorActionChip(label: '- Row', onPressed: () => onDeleteRow()),
+            _TableEditorActionChip(label: '+ Col', onPressed: () => onAddColumn()),
+            _TableEditorActionChip(label: '- Col', onPressed: () => onDeleteColumn()),
             _TableEditorActionChip(label: 'Reset', onPressed: () => onReset()),
             Row(
               children: [
@@ -76,6 +76,7 @@ class _TableEditorActionChip extends ActionChip {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(buttonBorderRadius),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4.0),
+          labelPadding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 0.0),
+          padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 0.0),
         );
 }

@@ -68,7 +68,7 @@ class TableCard extends StatelessWidget {
             Row(
               children: [
             Text(
-              'Click on cell to edit',
+              'Click on cell to edit.',
               style: TextStyle(
                 color: cardSubtitleTextColor,
                 fontSize: cardSubtitleFontSize,

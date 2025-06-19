@@ -120,7 +120,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
     final String message = widget.stage == OnboardingStage.tableHighlight
         ? 'Step 2. Touch any cell and edit.'
         : widget.stage == OnboardingStage.exportHighlight
-            ? 'Step 3. Export back to your Clipboard.'
+            ? 'Step 3. Export to your Clipboard.'
             : "Step 1. Paste Markdown.";
 
     if (targetKey.currentContext == null || targetKey.currentContext!.findRenderObject() == null) {
@@ -347,76 +347,91 @@ class _TableEditorPageState extends State<TableEditorPage> {
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(20,10,20,10),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 0),
-                  ImportCard(
-                    textFieldKey: _textFieldKey,
-                    exportButtonKey: _exportButtonKey,
-                    exportController: exportController,
-                    selectedExportFormat: selectedExportFormat,
-                    onFormatChanged: (DataFormat? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          selectedExportFormat = newValue;
-                          updateExportOutput();
-                        });
-                      }
-                    },
-                    onTextChanged: (value) {
-                      if (value.trim().isNotEmpty) {
-                        _handlePastedData(value.trim());
-                      }
-                    },
-                    onCopyToClipboard: _copyToClipboard,
+                  SizedBox(
+                    width: tableCellWidth * 5 + 40, // Based on ImportCard width plus padding
+                    child: Center(
+                      child: ImportCard(
+                        textFieldKey: _textFieldKey,
+                        exportButtonKey: _exportButtonKey,
+                        exportController: exportController,
+                        selectedExportFormat: selectedExportFormat,
+                        onFormatChanged: (DataFormat? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              selectedExportFormat = newValue;
+                              updateExportOutput();
+                            });
+                          }
+                        },
+                        onTextChanged: (value) {
+                          if (value.trim().isNotEmpty) {
+                            _handlePastedData(value.trim());
+                          }
+                        },
+                        onCopyToClipboard: _copyToClipboard,
+                      ),
+                    ),
                   ),
-                  TableCard(
-                    tableKey: _tableKey,
-                    isPreviewMode: isPreviewMode,
-                    selectedRowIndex: selectedRowIndex,
-                    selectedColIndex: selectedColIndex,
-                    tableData: tableData,
-                    cellControllers: cellControllers,
-                    cellFocusNodes: cellFocusNodes,
-                    verticalScrollController: _verticalScrollController,
-                    horizontalScrollController: _horizontalScrollController,
-                    onCellTap: (rowIndex, colIndex) {
-                      setState(() {
-                        isPreviewMode = false;
-                        selectedRowIndex = rowIndex;
-                        selectedColIndex = colIndex;
-                      });
-                    },
-                    additionalChildren: [
-                      TableControls(
+                  SizedBox(
+                    width: tableCellWidth * 5 + 40, // Same width as ImportCard
+                    child: Center(
+                      child: TableCard(
+                        tableKey: _tableKey,
                         isPreviewMode: isPreviewMode,
-                        onModeChanged: (value) {
+                        selectedRowIndex: selectedRowIndex,
+                        selectedColIndex: selectedColIndex,
+                        tableData: tableData,
+                        cellControllers: cellControllers,
+                        cellFocusNodes: cellFocusNodes,
+                        verticalScrollController: _verticalScrollController,
+                        horizontalScrollController: _horizontalScrollController,
+                        onCellTap: (rowIndex, colIndex) {
                           setState(() {
-                            isPreviewMode = value;
+                            isPreviewMode = false;
+                            selectedRowIndex = rowIndex;
+                            selectedColIndex = colIndex;
                           });
                         },
-                        onAddRow: _addRow,
-                        onAddColumn: _addColumn,
-                        onDeleteRow: _deleteRow,
-                        onDeleteColumn: _deleteColumn,
-                        onReset: _resetTable,
+                        additionalChildren: [
+                          TableControls(
+                            isPreviewMode: isPreviewMode,
+                            onModeChanged: (value) {
+                              setState(() {
+                                isPreviewMode = value;
+                              });
+                            },
+                            onAddRow: _addRow,
+                            onAddColumn: _addColumn,
+                            onDeleteRow: _deleteRow,
+                            onDeleteColumn: _deleteColumn,
+                            onReset: _resetTable,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 5),
-                  ExportCard(
-                    exportButtonKey: _exportButtonKey,
-                    exportController: exportController,
-                    selectedExportFormat: selectedExportFormat,
-                    onFormatChanged: (DataFormat? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          selectedExportFormat = newValue;
-                          updateExportOutput();
-                        });
-                      }
-                    },
-                    onCopyToClipboard: _copyToClipboard,
+                  SizedBox(
+                    width: tableCellWidth * 5 + 40, // Same width as ImportCard
+                    child: Center(
+                      child: ExportCard(
+                        exportButtonKey: _exportButtonKey,
+                        exportController: exportController,
+                        selectedExportFormat: selectedExportFormat,
+                        onFormatChanged: (DataFormat? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              selectedExportFormat = newValue;
+                              updateExportOutput();
+                            });
+                          }
+                        },
+                        onCopyToClipboard: _copyToClipboard,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   const Footer(),
