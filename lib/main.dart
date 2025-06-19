@@ -127,33 +127,41 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
   @override
   Widget build(BuildContext context) {
     if (widget.stage == OnboardingStage.welcome) {
-      return GestureDetector(
-        onTap: widget.onTap,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Container(
-                color: Colors.black.withOpacity(onboardingOpacity),
-              ),
-            ),
-            Positioned(
-              top: 50,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  'Welcome!  Easily edit your Markdown tables.',
-                  style: TextStyle(
-                    color: onboardingFontColor,
-                    fontSize: onboardingFontSize,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
+      return RawKeyboardListener(
+        focusNode: FocusNode(),
+        onKey: (RawKeyEvent event) {
+          if (event is RawKeyDownEvent) {
+            widget.onTap();
+          }
+        },
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withOpacity(onboardingOpacity),
                 ),
               ),
-            ),
-          ],
+              Positioned(
+                top: 50,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    'This tool lets you easily edit your Markdown tables.',
+                    style: TextStyle(
+                      color: onboardingFontColor,
+                      fontSize: onboardingFontSize,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -163,7 +171,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
         : widget.textFieldKey;
     final String message = widget.stage == OnboardingStage.tableHighlight
         ? 'Step 2. Click a cell to start editing.'
-        : "Step 1. Paste table's Markdown code here (if any).";
+        : "Step 1. Paste in your table's Markdown code.";
 
     if (targetKey.currentContext == null || targetKey.currentContext!.findRenderObject() == null) {
       return const SizedBox.shrink();
@@ -184,60 +192,68 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
     final Size targetSize = targetBox.size;
     // print("HERE4 - Target Offset: dx=${targetOffset.dx}, dy=${targetOffset.dy}, Size: width=${targetSize.width}, height=${targetSize.height}");
 
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Container(
-              color: Colors.black.withOpacity(onboardingOpacity),
-            ),
-          ),
-          Positioned(
-            left: targetOffset.dx,
-            top: targetOffset.dy - 60, // TODO: magic number
-            width: targetSize.width,
-            height: targetSize.height,
-            child: AnimatedBuilder(
-              animation: _pulseAnimation,
-              builder: (context, child) {
-                double expansion = 10 * _pulseAnimation.value;
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.blue.withOpacity(1 - _pulseAnimation.value),
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(8 + expansion),
-                  ),
-                  padding: EdgeInsets.all(expansion),
-                );
-              },
-            ),
-          ),
-          Positioned(
-            left: targetOffset.dx,
-            top: targetOffset.dy - 120, // Position above the highlighted element
-            width: targetSize.width,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              // decoration: BoxDecoration(
-              //   color: Colors.blue.shade700,
-              //   borderRadius: BorderRadius.circular(8),
-              // ),
-              child: Text(
-                message,
-                style: TextStyle(
-                  // color: Colors.white,
-                  color: onboardingFontColor,
-                  fontSize: onboardingFontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+    return RawKeyboardListener(
+      focusNode: FocusNode(),
+      onKey: (RawKeyEvent event) {
+        if (event is RawKeyDownEvent) {
+          widget.onTap();
+        }
+      },
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(onboardingOpacity),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              left: targetOffset.dx,
+              top: targetOffset.dy - 60, // TODO: magic number
+              width: targetSize.width,
+              height: targetSize.height,
+              child: AnimatedBuilder(
+                animation: _pulseAnimation,
+                builder: (context, child) {
+                  double expansion = 10 * _pulseAnimation.value;
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.blue.withOpacity(1 - _pulseAnimation.value),
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(8 + expansion),
+                    ),
+                    padding: EdgeInsets.all(expansion),
+                  );
+                },
+              ),
+            ),
+            Positioned(
+              left: targetOffset.dx,
+              top: targetOffset.dy - 120, // Position above the highlighted element
+              width: targetSize.width,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                // decoration: BoxDecoration(
+                //   color: Colors.blue.shade700,
+                //   borderRadius: BorderRadius.circular(8),
+                // ),
+                child: Text(
+                  message,
+                  style: TextStyle(
+                    // color: Colors.white,
+                    color: onboardingFontColor,
+                    fontSize: onboardingFontSize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
