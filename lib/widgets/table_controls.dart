@@ -27,8 +27,7 @@ class TableControls extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Divider(height: 1, thickness: 1, color: dividerColor),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         Wrap(
           alignment: WrapAlignment.start,
           spacing: 10,

@@ -6,16 +6,17 @@ import 'package:url_launcher/url_launcher.dart';
 import 'data_parser.dart';
 import 'styles.dart';
 import 'widgets/table_card.dart';
-import 'widgets/text_card.dart';
+import 'widgets/import_card.dart';
 import 'widgets/table_controls.dart';
+import 'widgets/export_card.dart';
 import 'widgets/footer.dart';
 
 // strings
 const String appTitle = 'Markdown Table Editor';
-const String onboardingWelcomeMessage = 'Easily edit your Markdown tables.';
+const String onboardingWelcomeMessage = 'Welcome - edit your Markdown tables with ease!';
 List<List<String>> tableDefaultData = [
-  ['**Header 1**', '[links are supported](\'https://theonion.com\')', '**Header 3**'],
-  ['**Row 1, Cell 1**', '[links are supported](\'https://theonion.com\')', 'Row 1, Cell 3'],
+  ['**Header 1**', '[links are supported](https://theonion.com)', '**Header 3**'],
+  ['**Row 1, Cell 1**', '[links are supported](https://theonion.com)', 'Row 1, Cell 3'],
   ['Row 2, Cell 1', 'Row 2, Cell 2', 'Row 2, Cell 3']
 ];
 
@@ -25,6 +26,7 @@ enum OnboardingStage {
   welcome,
   textHighlight,
   tableHighlight,
+  exportHighlight,
   completed,
 }
 
@@ -112,10 +114,14 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
 
     final GlobalKey targetKey = widget.stage == OnboardingStage.tableHighlight
         ? widget.tableKey
-        : widget.textFieldKey;
+        : widget.stage == OnboardingStage.exportHighlight
+            ? widget.exportButtonKey
+            : widget.textFieldKey;
     final String message = widget.stage == OnboardingStage.tableHighlight
-        ? 'Step 2. Click a cell to start editing.'
-        : "Step 1. Paste in your table's Markdown code.";
+        ? 'Step 2. Touch any cell and edit.'
+        : widget.stage == OnboardingStage.exportHighlight
+            ? 'Step 3. Export back to your Clipboard.'
+            : "Step 1. Paste Markdown.";
 
     if (targetKey.currentContext == null || targetKey.currentContext!.findRenderObject() == null) {
       return const SizedBox.shrink();
@@ -175,7 +181,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
             Positioned(
               left: targetOffset.dx,
               top: targetOffset.dy - 120, // Position above the highlighted element
-              width: targetSize.width,
+              // width: targetSize.width,
               child: Container(
                 padding: const EdgeInsets.all(10),
                 child: Text(
@@ -344,7 +350,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 0),
-                  TextCard(
+                  ImportCard(
                     textFieldKey: _textFieldKey,
                     exportButtonKey: _exportButtonKey,
                     exportController: exportController,
@@ -364,22 +370,6 @@ class _TableEditorPageState extends State<TableEditorPage> {
                     },
                     onCopyToClipboard: _copyToClipboard,
                   ),
-                  const SizedBox(height: 5),
-                  Row(
-                    children: [
-                      const SizedBox(width: 100),
-                      SvgPicture.asset(
-                        'images/sync.svg',
-                        width: syncIconSize,
-                        height: syncIconSize,
-                        colorFilter: ColorFilter.mode(
-                          const Color.fromARGB(255, 64, 62, 62),
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
                   TableCard(
                     tableKey: _tableKey,
                     isPreviewMode: isPreviewMode,
@@ -398,7 +388,6 @@ class _TableEditorPageState extends State<TableEditorPage> {
                       });
                     },
                     additionalChildren: [
-                      const SizedBox(height: 10),
                       TableControls(
                         isPreviewMode: isPreviewMode,
                         onModeChanged: (value) {
@@ -414,6 +403,21 @@ class _TableEditorPageState extends State<TableEditorPage> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 5),
+                  ExportCard(
+                    exportButtonKey: _exportButtonKey,
+                    exportController: exportController,
+                    selectedExportFormat: selectedExportFormat,
+                    onFormatChanged: (DataFormat? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          selectedExportFormat = newValue;
+                          updateExportOutput();
+                        });
+                      }
+                    },
+                    onCopyToClipboard: _copyToClipboard,
+                  ),
                   const SizedBox(height: 20),
                   const Footer(),
                 ],
@@ -426,30 +430,43 @@ class _TableEditorPageState extends State<TableEditorPage> {
               tableKey: _tableKey,
               textFieldKey: _textFieldKey,
               exportButtonKey: _exportButtonKey,
-              onTap: () {
-                setState(() {
-                  if (_onboardingStage == OnboardingStage.welcome) {
-                    _onboardingStage = OnboardingStage.textHighlight;
-                  } else if (_onboardingStage == OnboardingStage.textHighlight) {
-                    _onboardingStage = OnboardingStage.tableHighlight;
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (_tableKey.currentContext != null) {
-                        final RenderBox tableBox = _tableKey.currentContext!.findRenderObject() as RenderBox;
-                        final Offset tableOffset = tableBox.localToGlobal(Offset.zero);
-                        _verticalScrollController.animateTo(
-                          tableOffset.dy - 100, // Adjust for some padding
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
-                      }
-                    });
-                  } else if (_onboardingStage == OnboardingStage.tableHighlight) {
-                    _onboardingStage = OnboardingStage.completed;
-                  } else {
-                    _onboardingStage = OnboardingStage.completed;
-                  }
-                });
-              },
+            onTap: () {
+              setState(() {
+                if (_onboardingStage == OnboardingStage.welcome) {
+                  _onboardingStage = OnboardingStage.textHighlight;
+                } else if (_onboardingStage == OnboardingStage.textHighlight) {
+                  _onboardingStage = OnboardingStage.tableHighlight;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (_tableKey.currentContext != null) {
+                      final RenderBox tableBox = _tableKey.currentContext!.findRenderObject() as RenderBox;
+                      final Offset tableOffset = tableBox.localToGlobal(Offset.zero);
+                      _verticalScrollController.animateTo(
+                        tableOffset.dy - 100, // Adjust for some padding
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  });
+                } else if (_onboardingStage == OnboardingStage.tableHighlight) {
+                  _onboardingStage = OnboardingStage.exportHighlight;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (_exportButtonKey.currentContext != null) {
+                      final RenderBox exportBox = _exportButtonKey.currentContext!.findRenderObject() as RenderBox;
+                      final Offset exportOffset = exportBox.localToGlobal(Offset.zero);
+                      _verticalScrollController.animateTo(
+                        exportOffset.dy - 100, // Adjust for some padding
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  });
+                } else if (_onboardingStage == OnboardingStage.exportHighlight) {
+                  _onboardingStage = OnboardingStage.completed;
+                } else {
+                  _onboardingStage = OnboardingStage.completed;
+                }
+              });
+            },
             ),
         ],
       ),
@@ -613,7 +630,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
 
   void _resetTable() {
     setState(() {
-      tableData = [List<String>.from(tableDefaultData[0])];
+      tableData = tableDefaultData.map((row) => List<String>.from(row)).toList();
       _initializeCellControllers();
       updateExportOutput();
     });

@@ -31,7 +31,9 @@ const double cardPadding = 20.0;
 const double cardTitleFontSize = 18.0;
 const double cardTitleIconSize = 20.0;
 const Color cardTitleTextColor = Color(0xFFF6F6F6); // white
-
+const Color cardSubtitleTextColor = Color(0xFFA1A1A1); // light gray
+const double cardSubtitleFontSize = 14.0;
+const double cardTitleSubtitleSpacing = 5.0;
 // Dividers
 const Color dividerColor = Color(0xFF2E2E2E); // light gray
 
@@ -40,6 +42,10 @@ const Color dropdownBackgroundColor = Color(0xFF212121); // dark gray
 const Color dropdownBorderColor = Color(0xFF434343); // dark gray
 const Color dropdownTextColor = Color(0xFFFAFAFA); // white
 const Color dropdownLabelTextColor = Color(0xFFFAFAFA);
+
+// Footer
+const Color footerBackgroundColor = backgroundColor; // dark background
+const Color footerTextColor = cardSubtitleTextColor; // light gray
 
 // Headers
 const Color headerBackgroundColor = Color(0xFF1F1F1F); // dark gray
@@ -85,7 +91,8 @@ const double tableDataRowMinHeight = tableHeadingRowHeight;
 const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F); // dark gray
 const Color tableHeaderTextColor = Color(0xFFFAFAFA); // white
 const Color tableHeadingBackgroundColor = Color(0xFF1F1F1F); // dark gray
-const double tableHeight = 120.0;
+const int tableNumRows = 3;
+const double tableHeight = tableDataRowMaxHeight * tableNumRows * 1.1;
 const double tableIconSize = 35.0;
 const Color tableNormalCellBackgroundColor = Color(0xFF171717); // dark background
 const Color tableTextColor = Color(0xFFF9F9F9); // light gray

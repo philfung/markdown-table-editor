@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../styles.dart';
 import '../data_parser.dart';
+// Conditional import for web platform only
+import 'dart:html' if (dart.library.html) 'dart:html' as html;
 
 class TableCard extends StatelessWidget {
   final GlobalKey tableKey;
@@ -42,7 +44,14 @@ class TableCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.table_chart, color: cardTitleTextColor, size: cardTitleIconSize),
+                Text(
+                  '2',
+                  style: TextStyle(
+                    color: cardTitleTextColor,
+                    fontSize: cardTitleFontSize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(width: 12),
                 Text(
                   'Edit',
@@ -52,9 +61,22 @@ class TableCard extends StatelessWidget {
                     fontSize: cardTitleFontSize,
                   ),
                 ),
+
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: cardTitleSubtitleSpacing),
+            Row(
+              children: [
+            Text(
+              'Click on cell to edit',
+              style: TextStyle(
+                color: cardSubtitleTextColor,
+                fontSize: cardSubtitleFontSize,
+                fontStyle: FontStyle.italic,
+              ),
+            ),              
+            ]),
+            const SizedBox(height: cardTitleSubtitleSpacing),
             _buildTable(),
             ...additionalChildren,
           ],
@@ -135,6 +157,16 @@ class TableCard extends StatelessWidget {
                     styleSheet: MarkdownStyleSheet(
                       p: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
                     ),
+                    onTapLink: (text, href, title) {
+                      if (href != null) {
+                        try {
+                          html.window.open(href, '_blank');
+                        } catch (e) {
+                          // Fallback for non-web platforms or if html is not available
+                          print('Could not open link: $href');
+                        }
+                      }
+                    },
                   ),
                 ),
               )

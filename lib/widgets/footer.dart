@@ -9,7 +9,7 @@ class Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      color: appBarBackgroundColor,
+      color: footerBackgroundColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -22,7 +22,7 @@ class Footer extends StatelessWidget {
             },
             child: const Text(
               'GitHub',
-              style: TextStyle(color: appBarTextColor),
+              style: TextStyle(color: footerTextColor),
             ),
           ),
           const SizedBox(width: 16),
@@ -35,7 +35,7 @@ class Footer extends StatelessWidget {
             },
             child: const Text(
               'Written in Flutter',
-              style: TextStyle(color: appBarTextColor),
+              style: TextStyle(color: footerTextColor),
             ),
           ),
         ],
