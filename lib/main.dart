@@ -684,12 +684,13 @@ class _TableEditorPageState extends State<TableEditorPage> {
                       width: tableCellWidth,
                       height: tableCellHeight,
                       child: isPreviewMode
-                          ? MarkdownBody(
-                              data: tableData[0][index],
-                              // styleSheet: MarkdownStyleSheet(
-                              //   a: TextStyle(color: Colors.amber, fontSize:  tableCellFontSize, overflow: TextOverflow.ellipsis),
-                              //   p: TextStyle(color: Colors.green, fontSize:  tableCellFontSize, overflow: TextOverflow.ellipsis),
-                              // ),
+                          ? ClipRect(
+                              child: MarkdownBody(
+                                data: tableData[0][index],
+                                styleSheet: MarkdownStyleSheet(
+                                  p: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
+                                ),
+                              ),
                             )
                           : TextField(
                               controller: cellControllers[0][index],
@@ -734,19 +735,14 @@ class _TableEditorPageState extends State<TableEditorPage> {
                             width: tableCellWidth,
                             height: tableCellHeight,
                             child: isPreviewMode
-                                ? MarkdownBody(
-                                    data: tableData[actualRowIndex][colIndex],
-                                    styleSheet: MarkdownStyleSheet(
-                                      p: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
+                                ? ClipRect(
+                                    child: Text(
+                                      tableData[actualRowIndex][colIndex],
+                                      style: TextStyle(
+                                        fontSize: tableCellFontSize,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                    onTapLink: (text, href, title) async {
-                                      if (href != null) {
-                                        final Uri url = Uri.parse(href);
-                                        if (await canLaunchUrl(url)) {
-                                          await launchUrl(url, mode: LaunchMode.externalApplication);
-                                        }
-                                      }
-                                    },
                                   )
                                 : TextField(
                                     controller: cellControllers[actualRowIndex][colIndex],
