@@ -1017,7 +1017,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
         children: [
           TextButton(
             onPressed: () async {
-              const url = 'https://github.com/your-repo/markdown-table-editor';
+              const url = 'https://github.com/philfung/markdown-table-editor';
               if (await canLaunchUrl(Uri.parse(url))) {
                 await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
               }
