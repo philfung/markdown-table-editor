@@ -42,6 +42,7 @@ const Color dropdownBackgroundColor = Color(0xFF212121); // dark gray
 const Color dropdownBorderColor = Color(0xFF434343); // dark gray
 const Color dropdownTextColor = Color(0xFFFAFAFA); // white
 const Color dropdownLabelTextColor = Color(0xFFFAFAFA);
+const double exportFormatFontSize = 12.0;
 
 // Footer
 const Color footerBackgroundColor = backgroundColor; // dark background

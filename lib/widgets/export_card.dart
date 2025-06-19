@@ -48,8 +48,41 @@ class ExportCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 5),
-            const SizedBox(height: textFieldSpacing),
+            const SizedBox(height: 0),
+            Row(
+              children: [
+                Text(
+                  'Format:',
+                  style: TextStyle(
+                    color: cardTitleTextColor,
+                    fontSize: exportFormatFontSize,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                DropdownButton<DataFormat>(
+                  value: selectedExportFormat,
+                  onChanged: onFormatChanged,
+                  items: DataFormat.values.map((DataFormat format) {
+                    return DropdownMenuItem<DataFormat>(
+                      value: format,
+                      child: Text(
+                        DataParser.getFormatDisplayName(format),
+                        style: TextStyle(
+                          color: cardTitleTextColor,
+                          fontSize: exportFormatFontSize,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  dropdownColor: cardBackgroundColor,
+                  underline: Container(
+                    height: 2,
+                    color: buttonBorderColor,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 2),
             ElevatedButton.icon(
               key: exportButtonKey,
               onPressed: () => onCopyToClipboard(),
