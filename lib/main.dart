@@ -14,8 +14,8 @@ import 'widgets/footer.dart';
 const String appTitle = 'Markdown Table Editor';
 const String onboardingWelcomeMessage = 'Easily edit your Markdown tables.';
 List<List<String>> tableDefaultData = [
-  ['**Header 1**', '**Header 2**', '**Header 3**'],
-  ['Row 1, Cell 1', 'Row 1, Cell 2', 'Row 1, Cell 3'],
+  ['**Header 1**', '[links are supported](\'https://theonion.com\')', '**Header 3**'],
+  ['**Row 1, Cell 1**', '[links are supported](\'https://theonion.com\')', 'Row 1, Cell 3'],
   ['Row 2, Cell 1', 'Row 2, Cell 2', 'Row 2, Cell 3']
 ];
 

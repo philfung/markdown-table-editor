@@ -86,43 +86,7 @@ class TableCard extends StatelessWidget {
               columns: List.generate(
                 tableData[0].length,
                 (index) => DataColumn(
-                  label: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      onCellTap(0, index);
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        cellFocusNodes[0][index].requestFocus();
-                      });
-                    },
-                    child: SizedBox(
-                      width: tableCellWidth,
-                      height: tableCellHeight,
-                      child: isPreviewMode
-                          ? ClipRect(
-                              child: MarkdownBody(
-                                data: tableData[0][index],
-                                styleSheet: MarkdownStyleSheet(
-                                  p: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
-                                ),
-                              ),
-                            )
-                          : TextField(
-                              controller: cellControllers[0][index],
-                              focusNode: cellFocusNodes[0][index],
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                isDense: true,
-                                contentPadding: EdgeInsets.all(tableCellPadding),
-                              ),
-                              style: TextStyle(
-                                fontSize: tableCellFontSize,
-                                overflow: TextOverflow.ellipsis,
-                                color: cellControllers[0][index].text.contains('**') ? tableHeaderTextColor : tableTextColor,
-                                fontWeight: cellControllers[0][index].text.contains('**') ? FontWeight.bold : FontWeight.normal,
-                              ),
-                            ),
-                    ),
-                  ),
+                  label: _buildCellContent(0, index),
                 ),
               ),
               rows: List.generate(
@@ -133,44 +97,7 @@ class TableCard extends StatelessWidget {
                     cells: List.generate(
                       tableData[0].length,
                       (colIndex) => DataCell(
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            onCellTap(actualRowIndex, colIndex);
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              cellFocusNodes[actualRowIndex][colIndex].requestFocus();
-                            });
-                          },
-                          child: SizedBox(
-                            width: tableCellWidth,
-                            height: tableCellHeight,
-                            child: isPreviewMode
-                                ? ClipRect(
-                                    child: Text(
-                                      tableData[actualRowIndex][colIndex],
-                                      style: TextStyle(
-                                        fontSize: tableCellFontSize,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  )
-                                : TextField(
-                                    controller: cellControllers[actualRowIndex][colIndex],
-                                    focusNode: cellFocusNodes[actualRowIndex][colIndex],
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.all(tableCellPadding),
-                                    ),
-                                    style: TextStyle(
-                                      fontSize: tableCellFontSize,
-                                      overflow: TextOverflow.ellipsis,
-                                      color: cellControllers[actualRowIndex][colIndex].text.contains('**') ? tableHeaderTextColor : tableTextColor,
-                                      fontWeight: cellControllers[actualRowIndex][colIndex].text.contains('**') ? FontWeight.bold : FontWeight.normal,
-                                    ),
-                                  ),
-                          ),
-                        ),
+                        _buildCellContent(actualRowIndex, colIndex),
                       ),
                     ),
                   );
@@ -179,6 +106,62 @@ class TableCard extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCellContent(int rowIndex, int colIndex) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        onCellTap(rowIndex, colIndex);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          cellFocusNodes[rowIndex][colIndex].requestFocus();
+        });
+      },
+      child: SizedBox(
+        width: tableCellWidth,
+        height: tableCellHeight,
+        child: isPreviewMode
+            ? ClipRect(
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxWidth: tableCellWidth,
+                    maxHeight: tableCellHeight,
+                  ),
+                  child: MarkdownBody(
+                    data: tableData[rowIndex][colIndex],
+                    shrinkWrap: true,
+                    styleSheet: MarkdownStyleSheet(
+                      p: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
+                    ),
+                  ),
+                ),
+              )
+            : ClipRect(
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxWidth: tableCellWidth,
+                    maxHeight: tableCellHeight,
+                  ),
+                  child: TextField(
+                    controller: cellControllers[rowIndex][colIndex],
+                    focusNode: cellFocusNodes[rowIndex][colIndex],
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.all(tableCellPadding),
+                    ),
+                    style: TextStyle(
+                      fontSize: tableCellFontSize,
+                      overflow: TextOverflow.ellipsis,
+                      color: cellControllers[rowIndex][colIndex].text.contains('**') ? tableHeaderTextColor : tableTextColor,
+                      fontWeight: cellControllers[rowIndex][colIndex].text.contains('**') ? FontWeight.bold : FontWeight.normal,
+                    ),
+                    maxLines: 1, // Enforce single line with ellipsis
+                  ),
+                ),
+              ),
       ),
     );
   }
