@@ -151,22 +151,24 @@ class TableCard extends StatelessWidget {
                     maxWidth: tableCellWidth,
                     maxHeight: tableCellHeight,
                   ),
-                  child: MarkdownBody(
-                    data: tableData[rowIndex][colIndex],
-                    shrinkWrap: true,
-                    styleSheet: MarkdownStyleSheet(
-                      p: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
-                    ),
-                    onTapLink: (text, href, title) {
-                      if (href != null) {
-                        try {
-                          html.window.open(href, '_blank');
-                        } catch (e) {
-                          // Fallback for non-web platforms or if html is not available
-                          print('Could not open link: $href');
+                  child: Center(
+                    child: MarkdownBody(
+                      data: tableData[rowIndex][colIndex],
+                      shrinkWrap: true,
+                      styleSheet: MarkdownStyleSheet(
+                        p: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
+                      ),
+                      onTapLink: (text, href, title) {
+                        if (href != null) {
+                          try {
+                            html.window.open(href, '_blank');
+                          } catch (e) {
+                            // Fallback for non-web platforms or if html is not available
+                            print('Could not open link: $href');
+                          }
                         }
-                      }
-                    },
+                      },
+                    ),
                   ),
                 ),
               )
@@ -191,6 +193,7 @@ class TableCard extends StatelessWidget {
                       fontWeight: cellControllers[rowIndex][colIndex].text.contains('**') ? FontWeight.bold : FontWeight.normal,
                     ),
                     maxLines: 1, // Enforce single line with ellipsis
+                    textAlignVertical: TextAlignVertical.center,
                   ),
                 ),
               ),

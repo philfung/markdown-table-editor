@@ -13,9 +13,9 @@ import 'widgets/footer.dart';
 const String appTitle = 'The Best Markdown Table Editor';
 const String onboardingWelcomeMessage = 'Welcome - edit your Markdown tables with ease!';
 List<List<String>> tableDefaultData = [
-  ['**Name**', '**Type**', '**Ability**', '**Weakness**'],
-  ['[Pikachu](https://pokemondb.net/pokedex/pikachu)', 'Electric', 'Static', 'Ground'],
-  ['[Charmander](https://pokemondb.net/pokedex/charmander)', 'Fire', 'Blaze', 'Water'],
+  ['**Name**', '**Pokedex**', '**Type**', '**Ability**', '**Weakness**'],
+  ['Pikachu', '[Dex link](https://pokemondb.net/pokedex/pikachu)', 'Electric', 'Static', 'Ground'],
+  ['Charmander', '[Dex link](https://pokemondb.net/pokedex/charmander)', 'Fire', 'Blaze', 'Water'],
   // ['[Bulbasaur](https://pokemondb.net/pokedex/bulbasaur)', 'Grass / Poison', 'Overgrow', 'Fire']
 ];
 List<List<String>> tableData = tableDefaultData.map((row) => List<String>.from(row)).toList();
@@ -646,6 +646,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
       tableData = tableDefaultData.map((row) => List<String>.from(row)).toList();
       _initializeCellControllers();
       updateExportOutput();
+      // Reset scroll position to top-left
+      _verticalScrollController.jumpTo(0.0);
+      _horizontalScrollController.jumpTo(0.0);
     });
   }
 

@@ -8,7 +8,7 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(0),
       color: footerBackgroundColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

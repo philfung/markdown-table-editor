@@ -15,10 +15,10 @@ const double actionChipFontSize = 12.0;
 // App Bar
 const Color appBarBackgroundColor = Color(0xFF171717); // dark background
 Color appBarIconColor = whiteColor; // white
-const double appBarIconSize = 32.0;
+const double appBarIconSize = 29.0;
 Color appBarSurfaceTintColor = blueColor;// default blue
 Color appBarTextColor = whiteColor; // white
-const double appTitleFontSize = 22.0;
+const double appTitleFontSize = 20.0;
 
 // Background
 Color backgroundColor = blackColor; // dark dark
@@ -73,9 +73,9 @@ const double tableBorderRadius = 4.0;
 const double tableCellFontSize = 14.0;
 const double tableCellHeight = 25.0;
 const double tableCellPadding = 0.0;
-const double tableCellWidth = 85.0;
+const double tableCellWidth = 80.0;
 const Color tableDataRowColor = Color(0xFF2E2E2E); // light gray
-const double tableHeadingRowHeight = 35.0;
+const double tableHeadingRowHeight = 40.0;
 const double tableDataRowMaxHeight = tableHeadingRowHeight;
 const double tableDataRowMinHeight = tableHeadingRowHeight;
 const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F); // dark gray
