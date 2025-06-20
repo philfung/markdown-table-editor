@@ -1,16 +1,22 @@
-# table_editor
+# "The Best" Markdown Table Editor
 
-A new Flutter project.
+Easily edit markdown-coded tables with this client-side tool.  Written in Flutter.
 
-## Getting Started
+<img width="300" src="github/screenshot.png">
 
-This project is a starting point for a Flutter application.
+## Build Instructions
 
-A few resources to get you started if this is your first Flutter project:
+1. Install [Flutter](https://flutter.dev).
+2. Build & run locally
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+    ``
+    flutter run -d chrome
+    ``
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. Build for production deployment
+
+    ``
+    flutter build web
+    ``
+    
+    Then copy and serve the `/build/web` directory.
