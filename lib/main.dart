@@ -10,7 +10,7 @@ import 'widgets/export_card.dart';
 import 'widgets/footer.dart';
 
 // strings
-const String appTitle = 'Markdown Table Editor';
+const String appTitle = 'The Best Markdown Table Editor';
 const String onboardingWelcomeMessage = 'Welcome - edit your Markdown tables with ease!';
 List<List<String>> tableDefaultData = [
   ['**Name**', '**Type**', '**Ability**', '**Weakness**'],
