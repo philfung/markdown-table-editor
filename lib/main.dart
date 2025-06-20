@@ -122,12 +122,15 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProvid
                     builder: (context, child) {
                       return Transform.translate(
                         offset: Offset(_shakeAnimation.value, 0),
-                        child: Text(
-                          onboardingWelcomeMessage,
-                          style: TextStyle(
-                            color: onboardingFontColor,
-                            fontSize: onboardingFontSize,
-                            fontWeight: FontWeight.bold,
+                        child: RichText(
+                          text: TextSpan(
+                            text: onboardingWelcomeMessage,
+                            style: TextStyle(
+                              fontSize: onboardingFirstMessageFontSize,
+                              fontWeight: FontWeight.bold,
+                              foreground: Paint()
+                                ..shader = onboardingGradient.createShader(Rect.fromLTWH(0, 0, 500, 50)),
+                            ),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -219,12 +222,15 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProvid
                   builder: (context, child) {
                     return Transform.translate(
                       offset: Offset(_shakeAnimation.value, 0),
-                      child: Text(
-                        message,
-                        style: TextStyle(
-                          color: onboardingFontColor,
-                          fontSize: onboardingFontSize,
-                          fontWeight: FontWeight.bold,
+                      child: RichText(
+                        text: TextSpan(
+                          text: message,
+                          style: TextStyle(
+                            fontSize: onboardingFontSize,
+                            fontWeight: FontWeight.bold,
+                            foreground: Paint()
+                              ..shader = onboardingGradient.createShader(Rect.fromLTWH(0, 0, 400, 50)),
+                          ),
                         ),
                         textAlign: TextAlign.center,
                       ),

@@ -56,7 +56,21 @@ const Color headerTextColor = Color(0xFFFAFAFA); // white
 // Onboarding
 Color onboardingFontColor = const Color(0xFF1976D2); // light gray
 const double onboardingFontSize = 20.0;
+const double onboardingFirstMessageFontSize = 25.0;
 const double onboardingOpacity = 0.8;
+final LinearGradient onboardingGradient = LinearGradient(
+  colors: [
+    // Colors.red,
+    // Colors.orange,
+    // Colors.yellow,
+    // Colors.purple,
+    Colors.indigo,
+    Colors.blue,
+    Colors.green,
+  ],
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+);
 
 // Tables
 Color tableControlsButtonBorderColor = mediumGrayColor;
