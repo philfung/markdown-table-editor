@@ -48,24 +48,48 @@ class OnboardingOverlay extends StatefulWidget {
   _OnboardingOverlayState createState() => _OnboardingOverlayState();
 }
 
-class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProviderStateMixin {
+  late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
+  late AnimationController _shakeController;
+  late Animation<double> _shakeAnimation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+    _pulseController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
     )..repeat(reverse: true);
-    _pulseAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(_controller);
+    _pulseAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(_pulseController);
+    
+    _shakeController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    )..forward();
+    _shakeAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween<double>(begin: 0, end: 1), weight: 1),
+      TweenSequenceItem(tween: Tween<double>(begin: 2, end: -2), weight: 1),
+      TweenSequenceItem(tween: Tween<double>(begin: -2, end: 2), weight: 1),
+      TweenSequenceItem(tween: Tween<double>(begin: 2, end: -2), weight: 1),
+      TweenSequenceItem(tween: Tween<double>(begin: -2, end: 0), weight: 1),
+    ]).animate(_shakeController);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _pulseController.dispose();
+    _shakeController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant OnboardingOverlay oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.stage != oldWidget.stage) {
+      _shakeController.reset();
+      _shakeController.forward();
+    }
   }
 
   @override
@@ -93,14 +117,22 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.all(20),
-                  child: Text(
-                    onboardingWelcomeMessage,
-                    style: TextStyle(
-                      color: onboardingFontColor,
-                      fontSize: onboardingFontSize,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
+                  child: AnimatedBuilder(
+                    animation: _shakeAnimation,
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: Offset(_shakeAnimation.value, 0),
+                        child: Text(
+                          onboardingWelcomeMessage,
+                          style: TextStyle(
+                            color: onboardingFontColor,
+                            fontSize: onboardingFontSize,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -182,14 +214,22 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
               // width: targetSize.width,
               child: Container(
                 padding: const EdgeInsets.all(10),
-                child: Text(
-                  message,
-                  style: TextStyle(
-                    color: onboardingFontColor,
-                    fontSize: onboardingFontSize,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
+                child: AnimatedBuilder(
+                  animation: _shakeAnimation,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(_shakeAnimation.value, 0),
+                      child: Text(
+                        message,
+                        style: TextStyle(
+                          color: onboardingFontColor,
+                          fontSize: onboardingFontSize,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
