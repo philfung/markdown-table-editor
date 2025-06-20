@@ -384,19 +384,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                           fontWeight: FontWeight.bold,
                           fontSize: appTitleFontSize,
                           foreground: Paint()
-                            ..shader = LinearGradient(
-                              colors: [
-                                Colors.purple,
-                                Colors.indigo,
-                                Colors.blue,
-                                Colors.green,
-                                Colors.yellow,
-                                Colors.orange,
-                                Colors.red,
-                              ],
-                              begin: Alignment.bottomLeft,
-                              end: Alignment.topRight
-                            ).createShader(Rect.fromLTWH(0, 0, 250, 40)),
+                            ..shader = appTitleGradient.createShader(Rect.fromLTWH(0, 0, 250, 40)),
                         ),
                       ),
                       TextSpan(

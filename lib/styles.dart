@@ -19,7 +19,19 @@ Color appBarIconColor = Colors.blue; // white
 const double appBarIconSize = 29.0;
 Color appBarSurfaceTintColor = blueColor;// default blue
 const double appTitleFontSize = 20.0;
-
+const LinearGradient appTitleGradient = LinearGradient(
+  colors: [
+    // Colors.purple,
+    Colors.indigo,
+    Colors.blue,
+    // Colors.green,
+    // Colors.yellow,
+    // Colors.orange,
+    // Colors.red,
+  ],
+  begin: Alignment.bottomLeft,
+  end: Alignment.topRight,
+);
 // Background
 Color backgroundColor = blackColor; // dark dark
 
@@ -66,7 +78,7 @@ final LinearGradient onboardingGradient = LinearGradient(
     // Colors.purple,
     Colors.indigo,
     Colors.blue,
-    Colors.green,
+    // Colors.green,
   ],
   begin: Alignment.centerLeft,
   end: Alignment.centerRight,
