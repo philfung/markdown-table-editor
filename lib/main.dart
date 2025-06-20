@@ -390,7 +390,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                               ],
                               begin: Alignment.bottomLeft,
                               end: Alignment.topRight
-                            ).createShader(Rect.fromLTWH(0, 0, 250, 20)),
+                            ).createShader(Rect.fromLTWH(0, 0, 250, 40)),
                         ),
                       ),
                       TextSpan(

@@ -14,10 +14,10 @@ const double actionChipFontSize = 12.0;
 
 // App Bar
 const Color appBarBackgroundColor = Color(0xFF171717); // dark background
-Color appBarIconColor = whiteColor; // white
+Color appBarTextColor = Colors.blue; // white
+Color appBarIconColor = Colors.blue; // white
 const double appBarIconSize = 29.0;
 Color appBarSurfaceTintColor = blueColor;// default blue
-Color appBarTextColor = Colors.blueGrey.shade400; // white
 const double appTitleFontSize = 20.0;
 
 // Background
