@@ -51,6 +51,14 @@ const Color cardTitleTextColor = Color(0xFFF6F6F6); // white
 Color cardSubtitleTextColor = lightGrayColor;// light gray
 const double cardSubtitleFontSize = 11.0;
 const double cardTitleSubtitleSpacing = 5.0;
+final LinearGradient cardTitleGradient = LinearGradient(
+  colors: [
+    Colors.indigo,
+    Colors.blue,
+  ],
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+);
 // Dividers
 const Color dividerColor = Color(0xFF2E2E2E); // light gray
 

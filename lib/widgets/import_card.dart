@@ -33,21 +33,31 @@ class ImportCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(
-                  '1',
-                  style: TextStyle(
-                    color: cardTitleTextColor,
-                    fontSize: cardTitleFontSize,
-                    fontWeight: FontWeight.bold,
+                ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return cardTitleGradient.createShader(bounds);
+                  },
+                  child: Text(
+                    '1',
+                    style: TextStyle(
+                      color: Colors.white, // This color will be overridden by the shader
+                      fontSize: cardTitleFontSize,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
-                Text(
-                  'Import',
-                  style: TextStyle(
-                    color: cardTitleTextColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: cardTitleFontSize,
+                ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return cardTitleGradient.createShader(bounds);
+                  },
+                  child: Text(
+                    'Import',
+                    style: TextStyle(
+                      color: Colors.white, // This color will be overridden by the shader
+                      fontWeight: FontWeight.bold,
+                      fontSize: cardTitleFontSize,
+                    ),
                   ),
                 ),
               ],

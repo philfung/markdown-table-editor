@@ -44,21 +44,31 @@ class TableCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(
-                  '2',
-                  style: TextStyle(
-                    color: cardTitleTextColor,
-                    fontSize: cardTitleFontSize,
-                    fontWeight: FontWeight.bold,
+                ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return cardTitleGradient.createShader(bounds);
+                  },
+                  child: Text(
+                    '2',
+                    style: TextStyle(
+                      color: Colors.white, // This color will be overridden by the shader
+                      fontSize: cardTitleFontSize,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
-                Text(
-                  'Edit',
-                  style: TextStyle(
-                    color: cardTitleTextColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: cardTitleFontSize,
+                ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return cardTitleGradient.createShader(bounds);
+                  },
+                  child: Text(
+                    'Edit',
+                    style: TextStyle(
+                      color: Colors.white, // This color will be overridden by the shader
+                      fontWeight: FontWeight.bold,
+                      fontSize: cardTitleFontSize,
+                    ),
                   ),
                 ),
 
