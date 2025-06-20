@@ -466,7 +466,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   const Footer(),
                 ],
               ),
