@@ -118,7 +118,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
     final String message = widget.stage == OnboardingStage.tableHighlight
         ? 'Step 2. Edit your table.'
         : widget.stage == OnboardingStage.exportHighlight
-            ? 'Step 3. Export to your Clipboard.'
+            ? 'Step 3. Export to Clipboard.'
             : "Step 1. Paste Markdown.";
 
     if (targetKey.currentContext == null || targetKey.currentContext!.findRenderObject() == null) {
