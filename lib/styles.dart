@@ -54,7 +54,7 @@ const Color headerBackgroundColor = Color(0xFF1F1F1F); // dark gray
 const Color headerTextColor = Color(0xFFFAFAFA); // white
 
 // Onboarding
-Color onboardingFontColor = Colors.blue.shade700; // light gray
+Color onboardingFontColor = const Color(0xFF1976D2); // light gray
 const double onboardingFontSize = 20.0;
 const double onboardingOpacity = 0.8;
 
