@@ -20,7 +20,7 @@ class Footer extends StatelessWidget {
                 await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
               }
             },
-            child: const Text(
+            child: Text(
               'GitHub',
               style: TextStyle(color: footerTextColor),
             ),
@@ -33,7 +33,7 @@ class Footer extends StatelessWidget {
                 await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
               }
             },
-            child: const Text(
+            child: Text(
               'Written in Flutter',
               style: TextStyle(color: footerTextColor),
             ),

@@ -54,7 +54,7 @@ class ExportCard extends StatelessWidget {
                 Text(
                   'Format:',
                   style: TextStyle(
-                    color: cardTitleTextColor,
+                    color: cardSubtitleTextColor,
                     fontSize: exportFormatFontSize,
                   ),
                 ),
@@ -68,7 +68,7 @@ class ExportCard extends StatelessWidget {
                       child: Text(
                         DataParser.getFormatDisplayName(format),
                         style: TextStyle(
-                          color: cardTitleTextColor,
+                          color: cardSubtitleTextColor,
                           fontSize: exportFormatFontSize,
                         ),
                       ),
@@ -90,7 +90,7 @@ class ExportCard extends StatelessWidget {
               label: const Text('Export to Clipboard', style: TextStyle(fontSize: actionChipFontSize)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: buttonBackgroundColor,
-                foregroundColor: tableTextColor,
+                foregroundColor: buttonTextColor,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(buttonBorderRadius),

@@ -104,7 +104,7 @@ class TableCard extends StatelessWidget {
               dataRowMinHeight: tableDataRowMinHeight,
               dataRowMaxHeight: tableDataRowMaxHeight,
               headingRowColor: WidgetStateProperty.all(tableHeadingBackgroundColor),
-              border: TableBorder.all(color: tableBorderColor, borderRadius: BorderRadius.circular(tableBorderRadius)),
+              border: TableBorder.all(color: whiteColor, borderRadius: BorderRadius.circular(tableBorderRadius)),
               columns: List.generate(
                 tableData[0].length,
                 (index) => DataColumn(

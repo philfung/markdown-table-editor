@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'data_parser.dart';
 import 'styles.dart';
 import 'widgets/table_card.dart';
@@ -15,11 +13,11 @@ import 'widgets/footer.dart';
 const String appTitle = 'Markdown Table Editor';
 const String onboardingWelcomeMessage = 'Welcome - edit your Markdown tables with ease!';
 List<List<String>> tableDefaultData = [
-  ['**Header 1**', '[links are supported](https://theonion.com)', '**Header 3**'],
-  ['**Row 1, Cell 1**', '[links are supported](https://theonion.com)', 'Row 1, Cell 3'],
-  ['Row 2, Cell 1', 'Row 2, Cell 2', 'Row 2, Cell 3']
+  ['**Name**', '**Type**', '**Ability**', '**Weakness**'],
+  ['[Pikachu](https://pokemondb.net/pokedex/pikachu)', 'Electric', 'Static', 'Ground'],
+  ['[Charmander](https://pokemondb.net/pokedex/charmander)', 'Fire', 'Blaze', 'Water'],
+  // ['[Bulbasaur](https://pokemondb.net/pokedex/bulbasaur)', 'Grass / Poison', 'Overgrow', 'Fire']
 ];
-
 List<List<String>> tableData = tableDefaultData.map((row) => List<String>.from(row)).toList();
 
 enum OnboardingStage {
@@ -118,7 +116,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with SingleTicker
             ? widget.exportButtonKey
             : widget.textFieldKey;
     final String message = widget.stage == OnboardingStage.tableHighlight
-        ? 'Step 2. Touch any cell and edit.'
+        ? 'Step 2. Edit your table.'
         : widget.stage == OnboardingStage.exportHighlight
             ? 'Step 3. Export to your Clipboard.'
             : "Step 1. Paste Markdown.";
@@ -330,7 +328,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Text(appTitle, style: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold, fontSize: appTitleFontSize)),
+                Text(appTitle, style: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold, fontSize: appTitleFontSize)),
               ],
             ),
           ),
@@ -528,14 +526,14 @@ class _TableEditorPageState extends State<TableEditorPage> {
                   Navigator.of(context).pop();
                   updateExportOutput();
                 },
-                child: const Text('No', style: TextStyle(color: buttonTextColor)),
+                child: Text('No', style: TextStyle(color: buttonTextColor)),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   _importTableData(data, detectedFormat);
                 },
-                child: const Text('Yes', style: TextStyle(color: buttonTextColor)),
+                child: Text('Yes', style: TextStyle(color: buttonTextColor)),
               ),
             ],
           );

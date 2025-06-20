@@ -2,27 +2,32 @@
 
 import 'package:flutter/material.dart';
 
+Color whiteColor = Colors.white;
+Color blackColor = Colors.black;
+Color blueColor = Colors.blue;
+Color lightGrayColor = Colors.grey;
+Color mediumGrayColor = Colors.grey.shade600;
+Color darkGrayColor = Colors.grey.shade900;
+
 // Action Chip
 const double actionChipFontSize = 12.0;
 
 // App Bar
 const Color appBarBackgroundColor = Color(0xFF171717); // dark background
-const Color appBarIconColor = Color(0xFFFAFAFA); // white
+Color appBarIconColor = whiteColor; // white
 const double appBarIconSize = 32.0;
-const Color appBarSurfaceTintColor = Colors.blue; // default blue
-const Color appBarTextColor = Color(0xFFFAFAFA); // white
+Color appBarSurfaceTintColor = blueColor;// default blue
+Color appBarTextColor = whiteColor; // white
 const double appTitleFontSize = 22.0;
 
 // Background
-const Color backgroundColor = Color(0xFF0A0A0A); // dark dark
+Color backgroundColor = blackColor; // dark dark
 
 // Buttons
-const Color buttonBackgroundColor = Color(0xFF212121); // dark gray
-const Color buttonBorderColor = Color(0xFF3A3A3A); // light gray
+Color buttonBackgroundColor = darkGrayColor; // dark gray
+Color buttonBorderColor = lightGrayColor; // light gray
 const double buttonBorderRadius = 4.0;
-const Color buttonHighlightedBackgroundColor = Color(0xFFE5E5E5); // very light gray
-const Color buttonHighlightedBorderColor = Color(0xFF717171); // light gray
-const Color buttonTextColor = Color(0xFFF0F0F0); // light gray
+Color buttonTextColor = whiteColor; // light gray
 
 // Cards
 const Color cardBackgroundColor = Color(0xFF171717); // dark background
@@ -31,22 +36,18 @@ const double cardPadding = 20.0;
 const double cardTitleFontSize = 18.0;
 const double cardTitleIconSize = 20.0;
 const Color cardTitleTextColor = Color(0xFFF6F6F6); // white
-const Color cardSubtitleTextColor = Color(0xFFA1A1A1); // light gray
+Color cardSubtitleTextColor = lightGrayColor;// light gray
 const double cardSubtitleFontSize = 11.0;
 const double cardTitleSubtitleSpacing = 5.0;
 // Dividers
 const Color dividerColor = Color(0xFF2E2E2E); // light gray
 
-// Dropdowns
-const Color dropdownBackgroundColor = Color(0xFF212121); // dark gray
-const Color dropdownBorderColor = Color(0xFF434343); // dark gray
-const Color dropdownTextColor = Color(0xFFFAFAFA); // white
-const Color dropdownLabelTextColor = Color(0xFFFAFAFA);
+// Export Card
 const double exportFormatFontSize = 12.0;
 
 // Footer
-const Color footerBackgroundColor = backgroundColor; // dark background
-const Color footerTextColor = cardSubtitleTextColor; // light gray
+Color footerBackgroundColor = backgroundColor; // dark background
+Color footerTextColor = cardSubtitleTextColor; // light gray
 
 // Headers
 const Color headerBackgroundColor = Color(0xFF1F1F1F); // dark gray
@@ -57,36 +58,24 @@ Color onboardingFontColor = Colors.blue.shade700; // light gray
 const double onboardingFontSize = 20.0;
 const double onboardingOpacity = 0.8;
 
-// Text Fields
-const Color placeholderTextColor = Color(0xFFA1A1A1); // light gray
-const Color textFieldBackgroundColor = Color(0xFF212121); // dark gray
-const Color textFieldBorderBackgroundColor = Color(0xFF212121); // dark gray
-const String textFieldFontFamily = 'monospace';
-const double textFieldFontSize = 12.0;
-const int textFieldMaxLines = 3;
-const double textFieldSpacing = 10.0;
-const Color textFieldTextColor = Color(0xFFA1A1A1); // light gray
-
-// Snackbar
-const int snackbarDurationSeconds = 2;
-
-// Switches
-const double switchFontSize = 12.0;
-const Color switchTextColor = Color(0xFFFAFAFA); // white
-
-// Sync Icon
-const Color syncIconColor = Color(0xFFA1A1A1); 
-const double syncIconSize = 40.0;
-
 // Tables
+Color tableControlsButtonBorderColor = mediumGrayColor;
+Color tableControlsButtonTextColor = lightGrayColor; // white
+Color tableControlsButtonBackgroundColor = cardBackgroundColor; // dark background
+const Color tableControlsSwitchActiveColor = Color(0xFF171717); // dark background
+const Color tableControlsSwitchActiveTrackColor = Color(0xFF2E2E2E); // light gray
+const Color tableControlsSwitchInactiveThumbColor = Color(0xFFA1A1A1); // light gray
+const Color tableControlsSwitchInactiveTrackColor = Color(0xFF2E2E2E); // light gray
+const double tableControlsSwitchFontSize = 12.0;
+Color tableControlsSwitchTextColor = mediumGrayColor; // white
 const Color tableBorderColor = Color(0xFF2E2E2E); // light gray
-const double tableBorderRadius = 0.0;
-const double tableCellFontSize = 12.0;
-const double tableCellHeight = 20.0;
+const double tableBorderRadius = 4.0;
+const double tableCellFontSize = 14.0;
+const double tableCellHeight = 25.0;
 const double tableCellPadding = 0.0;
-const double tableCellWidth = 100.0;
+const double tableCellWidth = 85.0;
 const Color tableDataRowColor = Color(0xFF2E2E2E); // light gray
-const double tableHeadingRowHeight = 30.0;
+const double tableHeadingRowHeight = 35.0;
 const double tableDataRowMaxHeight = tableHeadingRowHeight;
 const double tableDataRowMinHeight = tableHeadingRowHeight;
 const Color tableHeaderCellBackgroundColor = Color(0xFF1F1F1F); // dark gray
@@ -98,6 +87,25 @@ const double tableIconSize = 35.0;
 const Color tableNormalCellBackgroundColor = Color(0xFF171717); // dark background
 const Color tableTextColor = Color(0xFFF9F9F9); // light gray
 
+// Text Fields
+const Color placeholderTextColor = Color(0xFFA1A1A1); // light gray
+Color textFieldBackgroundColor = cardBackgroundColor; // dark gray
+Color textFieldBorderBackgroundColor = lightGrayColor; // dark gray
+const String textFieldFontFamily = 'monospace';
+const double textFieldFontSize = 13.0;
+const int textFieldMaxLines = 3;
+const double textFieldSpacing = 10.0;
+Color textFieldTextColor = whiteColor;
+
+// Snackbar
+const int snackbarDurationSeconds = 2;
+
+
+// Sync Icon
+const Color syncIconColor = Color(0xFFA1A1A1); 
+const double syncIconSize = 40.0;
+
+
 // Theme Data
 ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
@@ -106,10 +114,10 @@ ThemeData appTheme = ThemeData(
   cardColor: cardBackgroundColor,
   dividerColor: dividerColor,
   textTheme: Typography().englishLike,
-  inputDecorationTheme: const InputDecorationTheme(
+  inputDecorationTheme: InputDecorationTheme(
     fillColor: textFieldBackgroundColor,
     border: OutlineInputBorder(borderSide: BorderSide(color: textFieldBorderBackgroundColor)),
-    hintStyle: TextStyle(color: placeholderTextColor),
+    hintStyle: const TextStyle(color: placeholderTextColor),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(

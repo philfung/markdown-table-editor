@@ -30,8 +30,8 @@ class TableControls extends StatelessWidget {
         const SizedBox(height: 10),
         Wrap(
           alignment: WrapAlignment.start,
-          spacing: 5,
-          runSpacing: 5,
+          spacing: 10,
+          runSpacing: 10,
           children: [
             _TableEditorActionChip(label: '+ Row', onPressed: () => onAddRow()),
             _TableEditorActionChip(label: '- Row', onPressed: () => onDeleteRow()),
@@ -42,16 +42,16 @@ class TableControls extends StatelessWidget {
               children: [
                 Text(
                   isPreviewMode ? 'Preview Mode' : 'Edit Mode',
-                  style: TextStyle(color: switchTextColor, fontSize: switchFontSize),
+                  style: TextStyle(color: tableControlsSwitchTextColor, fontSize: tableControlsSwitchFontSize),
                 ),
                 const SizedBox(width: 8),
                 Switch(
                   value: isPreviewMode,
                   onChanged: onModeChanged,
-                  activeColor: buttonHighlightedBackgroundColor,
-                  activeTrackColor: buttonBackgroundColor,
-                  inactiveThumbColor: buttonTextColor,
-                  inactiveTrackColor: buttonBorderColor,
+                  activeColor: tableControlsSwitchActiveColor,
+                  activeTrackColor: tableControlsSwitchActiveTrackColor,
+                  inactiveThumbColor: tableControlsSwitchInactiveThumbColor,
+                  inactiveTrackColor: tableControlsSwitchInactiveTrackColor,
                 ),
               ],
             ),
@@ -69,10 +69,10 @@ class _TableEditorActionChip extends ActionChip {
     required VoidCallback onPressed,
   }) : super(
           key: key,
-          label: Text(label, style: TextStyle(fontSize: actionChipFontSize, color: buttonTextColor)),
+          label: Text(label, style: TextStyle(fontSize: actionChipFontSize, color: tableControlsButtonTextColor)),
           onPressed: onPressed,
-          backgroundColor: buttonBackgroundColor,
-          side: BorderSide(color: buttonBorderColor),
+          backgroundColor: tableControlsButtonBackgroundColor,
+          side: BorderSide(color: tableControlsButtonBorderColor),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(buttonBorderRadius),
           ),

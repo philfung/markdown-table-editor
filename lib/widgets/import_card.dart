@@ -71,14 +71,12 @@ class ImportCard extends StatelessWidget {
                 key: textFieldKey,
                 controller: exportController,
                 maxLines: 2,
-                decoration: const InputDecoration(
-                  hintText: 'Paste data here to import or edit text directly. Supports Markdown, CSV, and Google Sheets formats.',
-                  hintStyle: TextStyle(color: textFieldTextColor),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: textFieldBorderBackgroundColor)),
+                  hintText: 'Paste data here to import or edit text directly. Supports Markdown, Excel, and Google Sheets formats.',
                   filled: true,
-                  fillColor: textFieldBackgroundColor,
                 ),
-                style: const TextStyle(fontFamily: textFieldFontFamily, fontSize: textFieldFontSize, color: textFieldTextColor),
+                style: TextStyle(fontFamily: textFieldFontFamily, fontSize: textFieldFontSize, color: textFieldTextColor),
                 onChanged: onTextChanged,
                 onTap: () {
                   if (exportController.text.isNotEmpty) {
