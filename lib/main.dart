@@ -68,11 +68,11 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProvid
       vsync: this,
     )..forward();
     _shakeAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween<double>(begin: 0, end: 1), weight: 1),
-      TweenSequenceItem(tween: Tween<double>(begin: 2, end: -2), weight: 1),
+      TweenSequenceItem(tween: Tween<double>(begin: 0, end: 3), weight: 1),
+      TweenSequenceItem(tween: Tween<double>(begin: 3, end: -3), weight: 1),
       TweenSequenceItem(tween: Tween<double>(begin: -2, end: 2), weight: 1),
-      TweenSequenceItem(tween: Tween<double>(begin: 2, end: -2), weight: 1),
-      TweenSequenceItem(tween: Tween<double>(begin: -2, end: 0), weight: 1),
+      TweenSequenceItem(tween: Tween<double>(begin: 1, end: -1), weight: 1),
+      TweenSequenceItem(tween: Tween<double>(begin: -1, end: 0), weight: 1),
     ]).animate(_shakeController);
   }
 
