@@ -56,7 +56,7 @@ class ImportCard extends StatelessWidget {
             Row(
               children: [
             Text(
-              'Copy/Paste code below. Supports Markdown, GSheets, Excel.',
+              'Copy/Paste code below. Supports MD, GSheets, Excel.',
               style: TextStyle(
                 color: cardSubtitleTextColor,
                 fontSize: cardSubtitleFontSize,
@@ -73,7 +73,7 @@ class ImportCard extends StatelessWidget {
                 maxLines: 2,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: textFieldBorderBackgroundColor)),
-                  hintText: 'Paste data here to import or edit text directly. Supports Markdown, Excel, and Google Sheets formats.',
+                  hintText: 'Paste data here to import or edit text directly. Supports MD, Excel, and Google Sheets formats.',
                   filled: true,
                 ),
                 style: TextStyle(fontFamily: textFieldFontFamily, fontSize: textFieldFontSize, color: textFieldTextColor),

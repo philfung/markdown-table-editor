@@ -17,7 +17,7 @@ const Color appBarBackgroundColor = Color(0xFF171717); // dark background
 Color appBarIconColor = whiteColor; // white
 const double appBarIconSize = 29.0;
 Color appBarSurfaceTintColor = blueColor;// default blue
-Color appBarTextColor = whiteColor; // white
+Color appBarTextColor = Colors.blueGrey.shade400; // white
 const double appTitleFontSize = 20.0;
 
 // Background

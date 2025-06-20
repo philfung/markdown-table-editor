@@ -328,7 +328,42 @@ class _TableEditorPageState extends State<TableEditorPage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(appTitle, style: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold, fontSize: appTitleFontSize)),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'The Best ',
+                        style: TextStyle(
+                          // color: appBarTextColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: appTitleFontSize,
+                          foreground: Paint()
+                            ..shader = LinearGradient(
+                              colors: [
+                                Colors.purple,
+                                Colors.indigo,
+                                Colors.blue,
+                                Colors.green,
+                                Colors.yellow,
+                                Colors.orange,
+                                Colors.red,
+                              ],
+                              begin: Alignment.bottomLeft,
+                              end: Alignment.topRight
+                            ).createShader(Rect.fromLTWH(0, 0, 250, 20)),
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'Markdown Table Editor',
+                        style: TextStyle(
+                          color: appBarTextColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: appTitleFontSize,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
