@@ -4,7 +4,6 @@ Easily edit markdown-coded tables with this client-side tool. Written in Flutter
 
 <img width="300" src="github/screenshot.png">
 
-
 ## Features
 
 - **Intuitive Interface**: Simple and clean UI for editing markdown tables.
@@ -50,8 +49,6 @@ This project is licensed under the MIT License - see the details below.
 
 ### MIT License
 
-Copyright (c) [2025] [Your Name or Organization]
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -70,9 +67,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## Contact
-
-For any questions or support, please open an issue on the GitHub repository or contact [Your Contact Information].
 
 ## Acknowledgments
 
