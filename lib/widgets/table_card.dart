@@ -41,8 +41,8 @@ class TableCard extends StatelessWidget {
     return CardUtils.renderCard(
       context: context,
       index: 2,
-      title: 'Table',
-      subtitle: 'Click cell to edit.',
+      title: 'Edit',
+      subtitle: 'Click cell to edit. ',
       additionalChildren: [_buildTable(), ...additionalChildren],
       upperRightWidget: Row(
         children: [
@@ -55,7 +55,7 @@ class TableCard extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Container(
-            // height: tableControlsSwitchHeight,
+            height: 10, // hack: set to small number so switch renders to transformed scale
             alignment: Alignment.center,
             child: Transform.scale(
               scaleY: tableControlsSwitchScale,
