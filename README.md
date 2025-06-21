@@ -1,4 +1,4 @@
-# *The Best* Markdown Table Editor
+# Markdown Table Editor
 
 Easily edit markdown-coded tables with this client-side tool. Written in Flutter.
 
@@ -9,7 +9,6 @@ Easily edit markdown-coded tables with this client-side tool. Written in Flutter
 - **Intuitive Interface**: Simple and clean UI for editing markdown tables.
 - **Real-time Preview**: See changes to your table as you edit.
 - **Import/Export**: Easily import existing markdown tables and export your edits.
-- **Cross-Platform**: Access the editor via web or as a desktop application.
 
 ## Installation
 
