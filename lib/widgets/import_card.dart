@@ -25,39 +25,46 @@ class ImportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardUtils.renderCard(context, 1, 'Import', 'Copy/Paste code below. Supports MD, GSheets, Excel.', [
-      SizedBox(
-        width:
-            tableCellWidth *
-            5, // Approximate width based on 5 columns of the data table
-        child: TextField(
-          key: textFieldKey,
-          controller: exportController,
-          maxLines: 2,
-          decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: textFieldBorderBackgroundColor),
+    return CardUtils.renderCard(
+      context: context,
+      index: 1,
+      title: 'Import',
+      subtitle: 'Copy/Paste code below. Supports MD, GSheets, Excel.',
+      additionalChildren: [
+        SizedBox(
+          width:
+              tableCellWidth *
+              5, // Approximate width based on 5 columns of the data table
+          child: TextField(
+            key: textFieldKey,
+            controller: exportController,
+            maxLines: 2,
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: textFieldBorderBackgroundColor),
+              ),
+              hintText:
+                  'Paste data here to import or edit text directly. Supports MD, Excel, and Google Sheets formats.',
+              filled: true,
             ),
-            hintText:
-                'Paste data here to import or edit text directly. Supports MD, Excel, and Google Sheets formats.',
-            filled: true,
+            style: TextStyle(
+              fontFamily: textFieldFontFamily,
+              fontSize: textFieldFontSize,
+              color: textFieldTextColor,
+            ),
+            onChanged: onTextChanged,
+            onTap: () {
+              if (exportController.text.isNotEmpty) {
+                exportController.selection = TextSelection(
+                  baseOffset: 0,
+                  extentOffset: exportController.text.length,
+                );
+              }
+            },
           ),
-          style: TextStyle(
-            fontFamily: textFieldFontFamily,
-            fontSize: textFieldFontSize,
-            color: textFieldTextColor,
-          ),
-          onChanged: onTextChanged,
-          onTap: () {
-            if (exportController.text.isNotEmpty) {
-              exportController.selection = TextSelection(
-                baseOffset: 0,
-                extentOffset: exportController.text.length,
-              );
-            }
-          },
         ),
-      ),
-    ]);
+      ],
+      upperRightWidget: null,
+    );
   }
 }

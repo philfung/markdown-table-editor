@@ -17,6 +17,7 @@ class TableCard extends StatelessWidget {
   final ScrollController verticalScrollController;
   final ScrollController horizontalScrollController;
   final Function(int, int) onCellTap;
+  final Function(bool) onModeChanged;
   final List<Widget> additionalChildren;
 
   const TableCard({
@@ -31,21 +32,40 @@ class TableCard extends StatelessWidget {
     required this.verticalScrollController,
     required this.horizontalScrollController,
     required this.onCellTap,
+    required this.onModeChanged,
     this.additionalChildren = const [],
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CardUtils.renderCard(
-      context, 
-      2, 'Table', 'Click on cell to edit.', 
-      [
-         _buildTable(),
-         ...additionalChildren
-      ]
-      );
+      context: context,
+      index: 2,
+      title: 'Table',
+      subtitle: 'Click on cell to edit.',
+      additionalChildren: [_buildTable(), ...additionalChildren],
+      upperRightWidget: Row(
+        children: [
+          Text(
+            isPreviewMode ? 'Preview Mode' : 'Edit Mode',
+            style: TextStyle(
+              color: tableControlsSwitchTextColor,
+              fontSize: tableControlsSwitchFontSize,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Switch(
+            value: isPreviewMode,
+            onChanged: onModeChanged,
+            activeColor: tableControlsSwitchActiveColor,
+            activeTrackColor: tableControlsSwitchActiveTrackColor,
+            inactiveThumbColor: tableControlsSwitchInactiveThumbColor,
+            inactiveTrackColor: tableControlsSwitchInactiveTrackColor,
+          ),
+        ],
+      ),
+    );
   }
-
 
   Widget _buildTable() {
     if (tableData.isEmpty || cellControllers.isEmpty) {
@@ -65,28 +85,27 @@ class TableCard extends StatelessWidget {
               headingRowHeight: tableHeadingRowHeight,
               dataRowMinHeight: tableDataRowMinHeight,
               dataRowMaxHeight: tableDataRowMaxHeight,
-              headingRowColor: WidgetStateProperty.all(tableHeadingBackgroundColor),
-              border: TableBorder.all(color: whiteColor, borderRadius: BorderRadius.circular(tableBorderRadius)),
+              headingRowColor: WidgetStateProperty.all(
+                tableHeadingBackgroundColor,
+              ),
+              border: TableBorder.all(
+                color: whiteColor,
+                borderRadius: BorderRadius.circular(tableBorderRadius),
+              ),
               columns: List.generate(
                 tableData[0].length,
-                (index) => DataColumn(
-                  label: _buildCellContent(0, index),
-                ),
+                (index) => DataColumn(label: _buildCellContent(0, index)),
               ),
-              rows: List.generate(
-                tableData.length - 1,
-                (rowIndex) {
-                  final actualRowIndex = rowIndex + 1;
-                  return DataRow(
-                    cells: List.generate(
-                      tableData[0].length,
-                      (colIndex) => DataCell(
-                        _buildCellContent(actualRowIndex, colIndex),
-                      ),
-                    ),
-                  );
-                },
-              ),
+              rows: List.generate(tableData.length - 1, (rowIndex) {
+                final actualRowIndex = rowIndex + 1;
+                return DataRow(
+                  cells: List.generate(
+                    tableData[0].length,
+                    (colIndex) =>
+                        DataCell(_buildCellContent(actualRowIndex, colIndex)),
+                  ),
+                );
+              }),
             ),
           ),
         ),
@@ -118,7 +137,10 @@ class TableCard extends StatelessWidget {
                       data: tableData[rowIndex][colIndex],
                       shrinkWrap: true,
                       styleSheet: MarkdownStyleSheet(
-                        p: TextStyle(fontSize: tableCellFontSize, overflow: TextOverflow.ellipsis),
+                        p: TextStyle(
+                          fontSize: tableCellFontSize,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       onTapLink: (text, href, title) {
                         if (href != null) {
@@ -151,8 +173,18 @@ class TableCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: tableCellFontSize,
                       overflow: TextOverflow.ellipsis,
-                      color: cellControllers[rowIndex][colIndex].text.contains('**') ? tableHeaderTextColor : tableTextColor,
-                      fontWeight: cellControllers[rowIndex][colIndex].text.contains('**') ? FontWeight.bold : FontWeight.normal,
+                      color:
+                          cellControllers[rowIndex][colIndex].text.contains(
+                            '**',
+                          )
+                          ? tableHeaderTextColor
+                          : tableTextColor,
+                      fontWeight:
+                          cellControllers[rowIndex][colIndex].text.contains(
+                            '**',
+                          )
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                     maxLines: 1, // Enforce single line with ellipsis
                     textAlignVertical: TextAlignVertical.center,

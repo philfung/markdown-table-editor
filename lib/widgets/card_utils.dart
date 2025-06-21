@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:table_editor/styles.dart';
 
 class CardUtils {
-  static renderCard(
-    BuildContext context,
-    int index,
-    String title,
-    String subtitle,
-    List<Widget> additionalChildren,
-  ) {
+  static renderCard({
+    required BuildContext context,
+    required int index,
+    required String title,
+    required String subtitle,
+    required List<Widget> additionalChildren,
+    required Widget? upperRightWidget,
+  }) {
     return Card(
       color: cardBackgroundColor,
       child: Padding(
@@ -32,6 +33,8 @@ class CardUtils {
                     ),
                   ),
                 ),
+                const Spacer(),
+                if (upperRightWidget != null) upperRightWidget,
               ],
             ),
             ...(subtitle.isNotEmpty

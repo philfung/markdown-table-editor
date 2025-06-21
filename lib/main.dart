@@ -11,14 +11,29 @@ import 'widgets/footer.dart';
 
 // strings
 const String appTitle = 'The Best Markdown Table Editor';
-const String onboardingWelcomeMessage = 'Welcome - edit your Markdown tables with ease!';
+const String onboardingWelcomeMessage =
+    'Welcome - edit your Markdown tables with ease!';
 List<List<String>> tableDefaultData = [
   ['**Name**', '**Pokedex**', '**Type**', '**Ability**', '**Weakness**'],
-  ['Pikachu', '[Dex link](https://pokemondb.net/pokedex/pikachu)', 'Electric', 'Static', 'Ground'],
-  ['Charmander', '[Dex link](https://pokemondb.net/pokedex/charmander)', 'Fire', 'Blaze', 'Water'],
+  [
+    'Pikachu',
+    '[Dex link](https://pokemondb.net/pokedex/pikachu)',
+    'Electric',
+    'Static',
+    'Ground',
+  ],
+  [
+    'Charmander',
+    '[Dex link](https://pokemondb.net/pokedex/charmander)',
+    'Fire',
+    'Blaze',
+    'Water',
+  ],
   // ['[Bulbasaur](https://pokemondb.net/pokedex/bulbasaur)', 'Grass / Poison', 'Overgrow', 'Fire']
 ];
-List<List<String>> tableData = tableDefaultData.map((row) => List<String>.from(row)).toList();
+List<List<String>> tableData = tableDefaultData
+    .map((row) => List<String>.from(row))
+    .toList();
 
 enum OnboardingStage {
   welcome,
@@ -48,7 +63,8 @@ class OnboardingOverlay extends StatefulWidget {
   _OnboardingOverlayState createState() => _OnboardingOverlayState();
 }
 
-class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProviderStateMixin {
+class _OnboardingOverlayState extends State<OnboardingOverlay>
+    with TickerProviderStateMixin {
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
   late AnimationController _shakeController;
@@ -61,8 +77,11 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProvid
       duration: const Duration(milliseconds: 500),
       vsync: this,
     )..repeat(reverse: true);
-    _pulseAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(_pulseController);
-    
+    _pulseAnimation = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(_pulseController);
+
     _shakeController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
@@ -129,7 +148,9 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProvid
                               fontSize: onboardingFirstMessageFontSize,
                               fontWeight: FontWeight.bold,
                               foreground: Paint()
-                                ..shader = onboardingGradient.createShader(Rect.fromLTWH(0, 0, 500, 50)),
+                                ..shader = onboardingGradient.createShader(
+                                  Rect.fromLTWH(0, 0, 500, 50),
+                                ),
                             ),
                           ),
                           textAlign: TextAlign.center,
@@ -148,19 +169,21 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProvid
     final GlobalKey targetKey = widget.stage == OnboardingStage.tableHighlight
         ? widget.tableKey
         : widget.stage == OnboardingStage.exportHighlight
-            ? widget.exportButtonKey
-            : widget.textFieldKey;
+        ? widget.exportButtonKey
+        : widget.textFieldKey;
     final String message = widget.stage == OnboardingStage.tableHighlight
         ? 'Step 2. Edit your table.'
         : widget.stage == OnboardingStage.exportHighlight
-            ? 'Step 3. Export to Clipboard.'
-            : "Step 1. Paste Markdown.";
+        ? 'Step 3. Export to Clipboard.'
+        : "Step 1. Paste Markdown.";
 
-    if (targetKey.currentContext == null || targetKey.currentContext!.findRenderObject() == null) {
+    if (targetKey.currentContext == null ||
+        targetKey.currentContext!.findRenderObject() == null) {
       return const SizedBox.shrink();
     }
 
-    final RenderBox targetBox = targetKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox targetBox =
+        targetKey.currentContext!.findRenderObject() as RenderBox;
     if (!targetBox.hasSize) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
@@ -201,7 +224,9 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProvid
                   return Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Colors.blue.withOpacity(1 - _pulseAnimation.value),
+                        color: Colors.blue.withOpacity(
+                          1 - _pulseAnimation.value,
+                        ),
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(8 + expansion),
@@ -213,7 +238,9 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProvid
             ),
             Positioned(
               left: targetOffset.dx,
-              top: targetOffset.dy - 120, // Position above the highlighted element
+              top:
+                  targetOffset.dy -
+                  120, // Position above the highlighted element
               // width: targetSize.width,
               child: Container(
                 padding: const EdgeInsets.all(10),
@@ -229,7 +256,9 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> with TickerProvid
                             fontSize: onboardingFontSize,
                             fontWeight: FontWeight.bold,
                             foreground: Paint()
-                              ..shader = onboardingGradient.createShader(Rect.fromLTWH(0, 0, 400, 50)),
+                              ..shader = onboardingGradient.createShader(
+                                Rect.fromLTWH(0, 0, 400, 50),
+                              ),
                           ),
                         ),
                         textAlign: TextAlign.center,
@@ -275,7 +304,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
   final GlobalKey _textFieldKey = GlobalKey();
   final GlobalKey _exportButtonKey = GlobalKey();
   OnboardingStage _onboardingStage = OnboardingStage.welcome;
-  
+
   final TextEditingController importController = TextEditingController();
   final TextEditingController exportController = TextEditingController();
   DataFormat selectedExportFormat = DataFormat.markdown;
@@ -312,20 +341,23 @@ class _TableEditorPageState extends State<TableEditorPage> {
       tableData.length,
       (rowIndex) => List.generate(
         tableData[rowIndex].length,
-        (colIndex) => TextEditingController(text: tableData[rowIndex][colIndex]),
+        (colIndex) =>
+            TextEditingController(text: tableData[rowIndex][colIndex]),
       ),
     );
     cellFocusNodes = List.generate(
       tableData.length,
-      (rowIndex) => List.generate(
-        tableData[rowIndex].length,
-        (colIndex) => FocusNode(),
-      ),
+      (rowIndex) =>
+          List.generate(tableData[rowIndex].length, (colIndex) => FocusNode()),
     );
 
     // Add listeners to update tableData when controllers change
     for (int rowIndex = 0; rowIndex < cellControllers.length; rowIndex++) {
-      for (int colIndex = 0; colIndex < cellControllers[rowIndex].length; colIndex++) {
+      for (
+        int colIndex = 0;
+        colIndex < cellControllers[rowIndex].length;
+        colIndex++
+      ) {
         final row = rowIndex;
         final col = colIndex;
         cellControllers[rowIndex][colIndex].addListener(() {
@@ -384,7 +416,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
                           fontWeight: FontWeight.bold,
                           fontSize: appTitleFontSize,
                           foreground: Paint()
-                            ..shader = appTitleGradient.createShader(Rect.fromLTWH(0, 0, 250, 40)),
+                            ..shader = appTitleGradient.createShader(
+                              Rect.fromLTWH(0, 0, 250, 40),
+                            ),
                         ),
                       ),
                       TextSpan(
@@ -412,13 +446,15 @@ class _TableEditorPageState extends State<TableEditorPage> {
               });
             },
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20,10,20,10),
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 0),
                   SizedBox(
-                    width: tableCellWidth * 5 + 40, // Based on ImportCard width plus padding
+                    width:
+                        tableCellWidth * 5 +
+                        40, // Based on ImportCard width plus padding
                     child: Center(
                       child: ImportCard(
                         textFieldKey: _textFieldKey,
@@ -462,14 +498,14 @@ class _TableEditorPageState extends State<TableEditorPage> {
                             selectedColIndex = colIndex;
                           });
                         },
+                        onModeChanged: (value) {
+                          setState(() {
+                            isPreviewMode = value;
+                          });
+                        },
                         additionalChildren: [
                           TableControls(
                             isPreviewMode: isPreviewMode,
-                            onModeChanged: (value) {
-                              setState(() {
-                                isPreviewMode = value;
-                              });
-                            },
                             onAddRow: _addRow,
                             onAddColumn: _addColumn,
                             onDeleteRow: _deleteRow,
@@ -512,43 +548,54 @@ class _TableEditorPageState extends State<TableEditorPage> {
               tableKey: _tableKey,
               textFieldKey: _textFieldKey,
               exportButtonKey: _exportButtonKey,
-            onTap: () {
-              setState(() {
-                if (_onboardingStage == OnboardingStage.welcome) {
-                  _onboardingStage = OnboardingStage.textHighlight;
-                } else if (_onboardingStage == OnboardingStage.textHighlight) {
-                  _onboardingStage = OnboardingStage.tableHighlight;
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (_tableKey.currentContext != null) {
-                      final RenderBox tableBox = _tableKey.currentContext!.findRenderObject() as RenderBox;
-                      final Offset tableOffset = tableBox.localToGlobal(Offset.zero);
-                      _verticalScrollController.animateTo(
-                        tableOffset.dy - 100, // Adjust for some padding
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
-                      );
-                    }
-                  });
-                } else if (_onboardingStage == OnboardingStage.tableHighlight) {
-                  _onboardingStage = OnboardingStage.exportHighlight;
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (_exportButtonKey.currentContext != null) {
-                      final RenderBox exportBox = _exportButtonKey.currentContext!.findRenderObject() as RenderBox;
-                      final Offset exportOffset = exportBox.localToGlobal(Offset.zero);
-                      _verticalScrollController.animateTo(
-                        exportOffset.dy - 100, // Adjust for some padding
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
-                      );
-                    }
-                  });
-                } else if (_onboardingStage == OnboardingStage.exportHighlight) {
-                  _onboardingStage = OnboardingStage.completed;
-                } else {
-                  _onboardingStage = OnboardingStage.completed;
-                }
-              });
-            },
+              onTap: () {
+                setState(() {
+                  if (_onboardingStage == OnboardingStage.welcome) {
+                    _onboardingStage = OnboardingStage.textHighlight;
+                  } else if (_onboardingStage ==
+                      OnboardingStage.textHighlight) {
+                    _onboardingStage = OnboardingStage.tableHighlight;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (_tableKey.currentContext != null) {
+                        final RenderBox tableBox =
+                            _tableKey.currentContext!.findRenderObject()
+                                as RenderBox;
+                        final Offset tableOffset = tableBox.localToGlobal(
+                          Offset.zero,
+                        );
+                        _verticalScrollController.animateTo(
+                          tableOffset.dy - 100, // Adjust for some padding
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    });
+                  } else if (_onboardingStage ==
+                      OnboardingStage.tableHighlight) {
+                    _onboardingStage = OnboardingStage.exportHighlight;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (_exportButtonKey.currentContext != null) {
+                        final RenderBox exportBox =
+                            _exportButtonKey.currentContext!.findRenderObject()
+                                as RenderBox;
+                        final Offset exportOffset = exportBox.localToGlobal(
+                          Offset.zero,
+                        );
+                        _verticalScrollController.animateTo(
+                          exportOffset.dy - 100, // Adjust for some padding
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    });
+                  } else if (_onboardingStage ==
+                      OnboardingStage.exportHighlight) {
+                    _onboardingStage = OnboardingStage.completed;
+                  } else {
+                    _onboardingStage = OnboardingStage.completed;
+                  }
+                });
+              },
             ),
         ],
       ),
@@ -614,7 +661,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Import Error'),
-            content: const Text('This text is not recognized as a recognizable format (Google Sheets, CSV, or Markdown).'),
+            content: const Text(
+              'This text is not recognized as a recognizable format (Google Sheets, CSV, or Markdown).',
+            ),
             actions: [
               TextButton(
                 onPressed: () {
@@ -644,7 +693,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
   void _addRow() {
     setState(() {
       if (tableData.isEmpty) {
-        tableData = [['']];
+        tableData = [
+          [''],
+        ];
       } else {
         final columnCount = tableData[0].length;
         final newRow = List.generate(columnCount, (index) => '');
@@ -666,7 +717,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
   void _addColumn() {
     setState(() {
       if (tableData.isEmpty) {
-        tableData = [['']];
+        tableData = [
+          [''],
+        ];
       } else {
         // Add a new column to each row
         for (int i = 0; i < tableData.length; i++) {
@@ -712,7 +765,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
 
   void _resetTable() {
     setState(() {
-      tableData = tableDefaultData.map((row) => List<String>.from(row)).toList();
+      tableData = tableDefaultData
+          .map((row) => List<String>.from(row))
+          .toList();
       _initializeCellControllers();
       updateExportOutput();
       // Reset scroll position to top-left
@@ -723,7 +778,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
 
   void _reloadApp() {
     setState(() {
-      tableData = tableDefaultData.map((row) => List<String>.from(row)).toList();
+      tableData = tableDefaultData
+          .map((row) => List<String>.from(row))
+          .toList();
       _initializeCellControllers();
       updateExportOutput();
       _onboardingStage = OnboardingStage.welcome;
@@ -745,7 +802,9 @@ class _TableEditorPageState extends State<TableEditorPage> {
     Clipboard.setData(ClipboardData(text: exportController.text));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${DataParser.getFormatDisplayName(selectedExportFormat)} data copied to clipboard!'),
+        content: Text(
+          '${DataParser.getFormatDisplayName(selectedExportFormat)} data copied to clipboard!',
+        ),
         duration: const Duration(seconds: snackbarDurationSeconds),
       ),
     );

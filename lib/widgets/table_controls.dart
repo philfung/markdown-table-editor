@@ -4,7 +4,7 @@ import '../data_parser.dart';
 
 class TableControls extends StatelessWidget {
   final bool isPreviewMode;
-  final Function(bool) onModeChanged;
+  // final Function(bool) onModeChanged;
   final Function onAddRow;
   final Function onAddColumn;
   final Function onDeleteRow;
@@ -14,7 +14,7 @@ class TableControls extends StatelessWidget {
   const TableControls({
     Key? key,
     required this.isPreviewMode,
-    required this.onModeChanged,
+    // required this.onModeChanged,
     required this.onAddRow,
     required this.onAddColumn,
     required this.onDeleteRow,
@@ -34,27 +34,19 @@ class TableControls extends StatelessWidget {
           runSpacing: 10,
           children: [
             _TableEditorActionChip(label: '+ Row', onPressed: () => onAddRow()),
-            _TableEditorActionChip(label: '- Row', onPressed: () => onDeleteRow()),
-            _TableEditorActionChip(label: '+ Col', onPressed: () => onAddColumn()),
-            _TableEditorActionChip(label: '- Col', onPressed: () => onDeleteColumn()),
-            _TableEditorActionChip(label: 'Reset', onPressed: () => onReset()),
-            Row(
-              children: [
-                Text(
-                  isPreviewMode ? 'Preview Mode' : 'Edit Mode',
-                  style: TextStyle(color: tableControlsSwitchTextColor, fontSize: tableControlsSwitchFontSize),
-                ),
-                const SizedBox(width: 8),
-                Switch(
-                  value: isPreviewMode,
-                  onChanged: onModeChanged,
-                  activeColor: tableControlsSwitchActiveColor,
-                  activeTrackColor: tableControlsSwitchActiveTrackColor,
-                  inactiveThumbColor: tableControlsSwitchInactiveThumbColor,
-                  inactiveTrackColor: tableControlsSwitchInactiveTrackColor,
-                ),
-              ],
+            _TableEditorActionChip(
+              label: '- Row',
+              onPressed: () => onDeleteRow(),
             ),
+            _TableEditorActionChip(
+              label: '+ Col',
+              onPressed: () => onAddColumn(),
+            ),
+            _TableEditorActionChip(
+              label: '- Col',
+              onPressed: () => onDeleteColumn(),
+            ),
+            _TableEditorActionChip(label: 'Reset', onPressed: () => onReset()),
           ],
         ),
       ],
@@ -68,15 +60,24 @@ class _TableEditorActionChip extends ActionChip {
     required String label,
     required VoidCallback onPressed,
   }) : super(
-          key: key,
-          label: Text(label, style: TextStyle(fontSize: actionChipFontSize, color: tableControlsButtonTextColor)),
-          onPressed: onPressed,
-          backgroundColor: tableControlsButtonBackgroundColor,
-          side: BorderSide(color: tableControlsButtonBorderColor),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(buttonBorderRadius),
-          ),
-          labelPadding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 0.0),
-          padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 0.0),
-        );
+         key: key,
+         label: Text(
+           label,
+           style: TextStyle(
+             fontSize: actionChipFontSize,
+             color: tableControlsButtonTextColor,
+           ),
+         ),
+         onPressed: onPressed,
+         backgroundColor: tableControlsButtonBackgroundColor,
+         side: BorderSide(color: tableControlsButtonBorderColor),
+         shape: RoundedRectangleBorder(
+           borderRadius: BorderRadius.circular(buttonBorderRadius),
+         ),
+         labelPadding: const EdgeInsets.symmetric(
+           horizontal: 3.0,
+           vertical: 0.0,
+         ),
+         padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 0.0),
+       );
 }
