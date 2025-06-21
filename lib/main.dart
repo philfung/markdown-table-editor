@@ -172,7 +172,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay>
         ? widget.exportButtonKey
         : widget.textFieldKey;
     final String message = widget.stage == OnboardingStage.tableHighlight
-        ? 'Step 2. Edit your table.'
+        ? 'Step 2. Edit table.'
         : widget.stage == OnboardingStage.exportHighlight
         ? 'Step 3. Export to Clipboard.'
         : "Step 1. Paste Markdown.";

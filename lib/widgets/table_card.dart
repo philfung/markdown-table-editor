@@ -42,7 +42,7 @@ class TableCard extends StatelessWidget {
       context: context,
       index: 2,
       title: 'Table',
-      subtitle: 'Click on cell to edit.',
+      subtitle: 'Click cell to edit.',
       additionalChildren: [_buildTable(), ...additionalChildren],
       upperRightWidget: Row(
         children: [
@@ -61,6 +61,7 @@ class TableCard extends StatelessWidget {
             activeTrackColor: tableControlsSwitchActiveTrackColor,
             inactiveThumbColor: tableControlsSwitchInactiveThumbColor,
             inactiveTrackColor: tableControlsSwitchInactiveTrackColor,
+            padding: const EdgeInsets.all(0),
           ),
         ],
       ),
