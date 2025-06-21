@@ -28,7 +28,7 @@ class CardUtils {
                     style: const TextStyle(
                       color: Colors
                           .white, // This color will be overridden by the shader
-                      fontSize: 20,
+                      fontSize: cardTitleFontSize,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
