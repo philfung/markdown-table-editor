@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:table_editor/widgets/card_utils.dart';
 import '../styles.dart';
 import '../data_parser.dart';
 // Conditional import for web platform only
@@ -35,65 +36,16 @@ class TableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: cardBackgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.all(cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                ShaderMask(
-                  shaderCallback: (Rect bounds) {
-                    return cardTitleGradient.createShader(bounds);
-                  },
-                  child: Text(
-                    '2',
-                    style: TextStyle(
-                      color: Colors.white, // This color will be overridden by the shader
-                      fontSize: cardTitleFontSize,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                ShaderMask(
-                  shaderCallback: (Rect bounds) {
-                    return cardTitleGradient.createShader(bounds);
-                  },
-                  child: Text(
-                    'Edit',
-                    style: TextStyle(
-                      color: Colors.white, // This color will be overridden by the shader
-                      fontWeight: FontWeight.bold,
-                      fontSize: cardTitleFontSize,
-                    ),
-                  ),
-                ),
-
-              ],
-            ),
-            const SizedBox(height: cardTitleSubtitleSpacing),
-            Row(
-              children: [
-            Text(
-              'Click on cell to edit.',
-              style: TextStyle(
-                color: cardSubtitleTextColor,
-                fontSize: cardSubtitleFontSize,
-                fontStyle: FontStyle.italic,
-              ),
-            ),              
-            ]),
-            const SizedBox(height: cardTitleSubtitleSpacing),
-            _buildTable(),
-            ...additionalChildren,
-          ],
-        ),
-      ),
-    );
+    return CardUtils.renderCard(
+      context, 
+      2, 'Table', 'Click on cell to edit.', 
+      [
+         _buildTable(),
+         ...additionalChildren
+      ]
+      );
   }
+
 
   Widget _buildTable() {
     if (tableData.isEmpty || cellControllers.isEmpty) {
