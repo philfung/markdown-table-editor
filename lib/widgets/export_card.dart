@@ -55,7 +55,7 @@ class ExportCard extends StatelessWidget {
                 );
               }).toList(),
               dropdownColor: cardBackgroundColor,
-              underline: Container(height: 1, color: buttonBorderColor),
+              underline: Container(height: 1, color: tableControlsSwitchUnderlineColor),
             ),
           ],
         ),

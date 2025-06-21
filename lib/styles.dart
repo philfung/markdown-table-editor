@@ -101,6 +101,7 @@ const Color tableControlsSwitchActiveTrackColor = Color(0xFF2E2E2E); // light gr
 const Color tableControlsSwitchInactiveThumbColor = Color(0xFFA1A1A1); // light gray
 const Color tableControlsSwitchInactiveTrackColor = Color(0xFF2E2E2E); // light gray
 const double tableControlsSwitchFontSize = 12.0;
+Color tableControlsSwitchUnderlineColor = mediumGrayColor; // light gray
 Color tableControlsSwitchTextColor = mediumGrayColor; // white
 const Color tableBorderColor = Color(0xFF2E2E2E); // light gray
 const double tableBorderRadius = 4.0;
