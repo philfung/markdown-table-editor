@@ -3,7 +3,7 @@ import 'package:table_editor/widgets/card_utils.dart';
 import '../styles.dart';
 import '../data_parser.dart';
 
-class ImportCard extends StatelessWidget {
+class ImportCard extends StatefulWidget {
   final GlobalKey textFieldKey;
   final GlobalKey exportButtonKey;
   final TextEditingController exportController;
@@ -24,6 +24,33 @@ class ImportCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _ImportCardState createState() => _ImportCardState();
+}
+
+class _ImportCardState extends State<ImportCard> {
+  late ScrollController _scrollController;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _focusNode = FocusNode()
+      ..addListener(() {
+        if (!_focusNode.hasFocus) {
+          _scrollController.jumpTo(0);
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CardUtils.renderCard(
       context: context,
@@ -36,9 +63,11 @@ class ImportCard extends StatelessWidget {
               tableCellWidth *
               5, // Approximate width based on 5 columns of the data table
           child: TextField(
-            key: textFieldKey,
-            controller: exportController,
+            key: widget.textFieldKey,
+            controller: widget.exportController,
             maxLines: 2,
+            scrollController: _scrollController,
+            focusNode: _focusNode,
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: textFieldBorderBackgroundColor),
@@ -52,12 +81,12 @@ class ImportCard extends StatelessWidget {
               fontSize: textFieldFontSize,
               color: textFieldTextColor,
             ),
-            onChanged: onTextChanged,
+            onChanged: widget.onTextChanged,
             onTap: () {
-              if (exportController.text.isNotEmpty) {
-                exportController.selection = TextSelection(
+              if (widget.exportController.text.isNotEmpty) {
+                widget.exportController.selection = TextSelection(
                   baseOffset: 0,
-                  extentOffset: exportController.text.length,
+                  extentOffset: widget.exportController.text.length,
                 );
               }
             },
