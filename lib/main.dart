@@ -10,7 +10,7 @@ import 'widgets/export_card.dart';
 import 'widgets/footer.dart';
 
 // strings
-const String appTitle = 'The Best Markdown Table Editor';
+const String appTitle = 'Awesome Markdown Table Editor';
 const String onboardingWelcomeMessage =
     'Welcome - edit your Markdown tables with ease!';
 List<List<String>> tableDefaultData = [
@@ -416,7 +416,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'The Best ',
+                        text: 'Awesome ',
                         style: TextStyle(
                           // color: appBarTextColor,
                           fontWeight: FontWeight.bold,
