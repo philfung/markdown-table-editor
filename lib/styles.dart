@@ -92,6 +92,8 @@ final LinearGradient onboardingGradient = LinearGradient(
   end: Alignment.centerRight,
 );
 
+const double cardWidth = double.infinity; // Width for cards to take full available space
+
 // Tables
 Color tableControlsButtonBorderColor = mediumGrayColor;
 Color tableControlsButtonTextColor = lightGrayColor; // white

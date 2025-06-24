@@ -452,9 +452,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                 children: [
                   const SizedBox(height: 0),
                   SizedBox(
-                    width:
-                        tableCellWidth * 5 +
-                        40, // Based on ImportCard width plus padding
+                    width: cardWidth, // Use width from styles.dart
                     child: Center(
                       child: ImportCard(
                         textFieldKey: _textFieldKey,
@@ -479,7 +477,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                     ),
                   ),
                   SizedBox(
-                    width: tableCellWidth * 5 + 40, // Same width as ImportCard
+                    width: cardWidth, // Use width from styles.dart
                     child: Center(
                       child: TableCard(
                         tableKey: _tableKey,
@@ -518,7 +516,7 @@ class _TableEditorPageState extends State<TableEditorPage> {
                   ),
                   const SizedBox(height: 5),
                   SizedBox(
-                    width: tableCellWidth * 5 + 40, // Same width as ImportCard
+                    width: cardWidth, // Use width from styles.dart
                     child: Center(
                       child: ExportCard(
                         exportButtonKey: _exportButtonKey,
