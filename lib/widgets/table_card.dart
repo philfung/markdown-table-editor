@@ -1,3 +1,5 @@
+import 'dart:math' as Math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:table_editor/widgets/card_utils.dart';
@@ -90,31 +92,38 @@ class TableCard extends StatelessWidget {
           child: SingleChildScrollView(
             controller: horizontalScrollController,
             scrollDirection: Axis.horizontal,
-            child: DataTable(
-              headingRowHeight: tableHeadingRowHeight,
-              dataRowMinHeight: tableDataRowMinHeight,
-              dataRowMaxHeight: tableDataRowMaxHeight,
-              headingRowColor: WidgetStateProperty.all(
-                tableHeadingBackgroundColor,
-              ),
-              border: TableBorder.all(
-                color: whiteColor,
-                borderRadius: BorderRadius.circular(tableBorderRadius),
-              ),
-              columns: List.generate(
-                tableData[0].length,
-                (index) => DataColumn(label: _buildCellContent(0, index)),
-              ),
-              rows: List.generate(tableData.length - 1, (rowIndex) {
-                final actualRowIndex = rowIndex + 1;
-                return DataRow(
-                  cells: List.generate(
-                    tableData[0].length,
-                    (colIndex) =>
-                        DataCell(_buildCellContent(actualRowIndex, colIndex)),
+            child: Builder(
+              builder: (context) {
+                // Use MediaQuery to get a reasonable width constraint
+                double availableWidth = MediaQuery.of(context).size.width - 40; // Subtract some padding
+                double cellWidth = getTableCellWidth(tableData[0].length, availableWidth);
+                return DataTable(
+                  headingRowHeight: tableHeadingRowHeight,
+                  dataRowMinHeight: tableDataRowMinHeight,
+                  dataRowMaxHeight: tableDataRowMaxHeight,
+                  headingRowColor: WidgetStateProperty.all(
+                    tableHeadingBackgroundColor,
                   ),
+                  border: TableBorder.all(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.circular(tableBorderRadius),
+                  ),
+                  columns: List.generate(
+                    tableData[0].length,
+                    (index) => DataColumn(label: _buildCellContent(0, index, cellWidth)),
+                  ),
+                  rows: List.generate(tableData.length - 1, (rowIndex) {
+                    final actualRowIndex = rowIndex + 1;
+                    return DataRow(
+                      cells: List.generate(
+                        tableData[0].length,
+                        (colIndex) =>
+                            DataCell(_buildCellContent(actualRowIndex, colIndex, cellWidth)),
+                      ),
+                    );
+                  }),
                 );
-              }),
+              },
             ),
           ),
         ),
@@ -122,7 +131,13 @@ class TableCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCellContent(int rowIndex, int colIndex) {
+  double getTableCellWidth(int numberOfColumns, double availableWidth) {
+    // Calculate width as (card width - spacing) / number of columns, with a minimum of 80
+    double calculatedWidth = availableWidth / (numberOfColumns + 1.0);
+    return Math.max(calculatedWidth, minTableCellWidth);
+  }
+
+  Widget _buildCellContent(int rowIndex, int colIndex, double cellWidth) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -132,43 +147,44 @@ class TableCard extends StatelessWidget {
         });
       },
       child: SizedBox(
-        width: tableCellWidth,
+        width: cellWidth,
         height: tableCellHeight,
         child: isPreviewMode
             ? ClipRect(
                 child: Container(
                   constraints: BoxConstraints(
-                    maxWidth: tableCellWidth,
-                    maxHeight: tableCellHeight,
+                    maxWidth: cellWidth,
+                    maxHeight: tableCellHeight + 10.0, // Increased to accommodate potential overflow
                   ),
-                  child: Center(
-                    child: MarkdownBody(
-                      data: tableData[rowIndex][colIndex],
-                      shrinkWrap: true,
-                      styleSheet: MarkdownStyleSheet(
-                        p: TextStyle(
-                          fontSize: tableCellFontSize,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                  child: MarkdownBody(
+                    data: tableData[rowIndex][colIndex],
+                    shrinkWrap: true,
+                    fitContent: true,
+                    styleSheet: MarkdownStyleSheet(
+                      p: TextStyle(
+                        fontSize: tableCellFontSize,
+                        overflow: TextOverflow.ellipsis,
+                        color: rowIndex == 0 ? tableHeaderTextColor : tableTextColor,
+                        fontWeight: rowIndex == 0 ? FontWeight.bold : FontWeight.normal,
                       ),
-                      onTapLink: (text, href, title) {
-                        if (href != null) {
-                          try {
-                            html.window.open(href, '_blank');
-                          } catch (e) {
-                            // Fallback for non-web platforms or if html is not available
-                            print('Could not open link: $href');
-                          }
-                        }
-                      },
                     ),
+                    onTapLink: (text, href, title) {
+                      if (href != null) {
+                        try {
+                          html.window.open(href, '_blank');
+                        } catch (e) {
+                          // Fallback for non-web platforms or if html is not available
+                          print('Could not open link: $href');
+                        }
+                      }
+                    },
                   ),
                 ),
               )
             : ClipRect(
                 child: Container(
                   constraints: BoxConstraints(
-                    maxWidth: tableCellWidth,
+                    maxWidth: cellWidth,
                     maxHeight: tableCellHeight,
                   ),
                   child: TextField(
@@ -182,18 +198,16 @@ class TableCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: tableCellFontSize,
                       overflow: TextOverflow.ellipsis,
-                      color:
-                          cellControllers[rowIndex][colIndex].text.contains(
-                            '**',
-                          )
-                          ? tableHeaderTextColor
-                          : tableTextColor,
-                      fontWeight:
-                          cellControllers[rowIndex][colIndex].text.contains(
-                            '**',
-                          )
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+                      color: rowIndex == 0 
+                          ? tableHeaderTextColor 
+                          : (cellControllers[rowIndex][colIndex].text.contains('**') 
+                              ? tableHeaderTextColor 
+                              : tableTextColor),
+                      fontWeight: rowIndex == 0 
+                          ? FontWeight.bold 
+                          : (cellControllers[rowIndex][colIndex].text.contains('**') 
+                              ? FontWeight.bold 
+                              : FontWeight.normal),
                     ),
                     maxLines: 1, // Enforce single line with ellipsis
                     textAlignVertical: TextAlignVertical.center,

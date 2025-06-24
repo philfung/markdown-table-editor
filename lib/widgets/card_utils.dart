@@ -13,7 +13,7 @@ class CardUtils {
     return Card(
       color: cardBackgroundColor,
       child: Padding(
-        padding: const EdgeInsets.all(cardPadding),
+        padding: const EdgeInsets.fromLTRB(cardPaddingLeftRight, cardPaddingTopDown, cardPaddingLeftRight, cardPaddingTopDown),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

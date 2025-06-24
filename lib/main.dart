@@ -29,7 +29,13 @@ List<List<String>> tableDefaultData = [
     'Blaze',
     'Water',
   ],
-  // ['[Bulbasaur](https://pokemondb.net/pokedex/bulbasaur)', 'Grass / Poison', 'Overgrow', 'Fire']
+  [
+    'Bulbasaur',
+    '[Dex link](https://pokemondb.net/pokedex/bulbasaur)',
+    'Grass / Poison',
+    'Overgrow',
+    'Fire',
+  ],
 ];
 List<List<String>> tableData = tableDefaultData
     .map((row) => List<String>.from(row))

@@ -1,3 +1,5 @@
+import 'dart:math' as Math;
+
 import 'package:flutter/material.dart';
 import 'package:table_editor/widgets/card_utils.dart';
 import '../styles.dart';
@@ -60,8 +62,7 @@ class _ImportCardState extends State<ImportCard> {
       additionalChildren: [
         SizedBox(
           width:
-              tableCellWidth *
-              5, // Approximate width based on 5 columns of the data table
+              Math.max(MediaQuery.of(context).size.width - 300, 400), 
           child: TextField(
             key: widget.textFieldKey,
             controller: widget.exportController,
